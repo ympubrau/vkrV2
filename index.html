@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="flex-container">
+
+    <div class="flex-child magenta">
+        <div>
+            <label for="roundSizeSlider">Выберите диаметр круга:</label>
+            <input type="range" value="100" id="roundSizeSlider" min=10 max=500>
+            <input type="text" value="100" id="roundSizeText">
+        </div>
+
+        <div>
+            <label for="roundColorPicker">Выберите цвет фигуры:</label>
+            <input type="color" value="#000000" id="roundColorPicker">
+        </div>
+
+        <div>
+            <label for="xPositionsSlider">Выберите количество позиций по X:</label>
+            <input type="range" value="5" id="xPositionsSlider" min=1 max=12>
+            <input type="text" value="5" id="xPositionsText">
+        </div>
+
+        <div>
+            <label for="yPositionsSlider">Выберите количество позиций по Y:</label>
+            <input type="range" value="5" id="yPositionsSlider" min=1 max=12>
+            <input type="text" value="5" id="yPositionsText">
+        </div>
+
+        <div>
+            <label for="betweenPositionsSlider">Расстояние между центрами</label>
+            <input type="range" value="50" id="betweenPositionsSlider" min=20 max=100>
+            <input type="text" value="50" id="betweenPositionsText">
+        </div>
+
+        <div>
+            <label for="betweenPositionsSlider">Размер окружающего поля</label>
+            <input type="range" value="50" id="borderSlider" min=20 max=100>
+            <input type="text" value="50" id="borderText">
+        </div>
+
+        <div>
+            <label><b>Скачайте json файл с настройками:</b></label>
+            <button onclick="downloadJson()">Скачать файл c Настройками</button>
+        </div>
+
+        <div>
+            <label for="fileUpload"><b>Загрузите json файл с настройками:</b></label>
+            <input type="file" id="fileUpload" accept=".json">
+        </div>
+
+    </div>
+
+    <div class="flex-child green">
+        <div>
+            <canvas id="canvas" width="400px" height="400px">
+                <p>Ваш браузер не поддерживает рисование.</p>
+            </canvas>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+</body>
+<script src="script.js"></script>
+</html>

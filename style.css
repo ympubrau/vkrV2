@@ -1,0 +1,38 @@
+body{
+    font-family: 'poppins', sans-serif;
+    font-size: 20px;
+    line-height: 24px;
+    padding-top: 1em;
+    padding-left: 1em;
+    background-color: beige;
+}
+
+label{
+    font-size: 14px;
+}
+
+div{
+    padding-bottom: 2em;
+}
+
+input[type='range']{
+    position: relative;
+    display: inline-block;
+    top: 4px;
+}
+
+canvas{
+    background-color: white;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.flex-child {
+    flex: 1;
+}
+
+.flex-child:first-child {
+    margin-right: 20px;
+}
