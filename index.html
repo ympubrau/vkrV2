@@ -17,11 +17,6 @@
         </div>
 
         <div>
-            <label for="roundColorPicker">Выберите цвет фигуры:</label>
-            <input type="color" value="#000000" id="roundColorPicker">
-        </div>
-
-        <div>
             <label for="xPositionsSlider">Выберите количество позиций по X:</label>
             <input type="range" value="5" id="xPositionsSlider" min=1 max=12>
             <input type="text" value="5" id="xPositionsText">
@@ -44,27 +39,35 @@
             <input type="range" value="50" id="borderSlider" min=20 max=100>
             <input type="text" value="50" id="borderText">
         </div>
-
-        <div>
-            <label><b>Скачайте json файл с настройками:</b></label>
-            <button onclick="downloadJson()">Скачать файл c Настройками</button>
-        </div>
-
-        <div>
-            <label for="fileUpload"><b>Загрузите json файл с настройками:</b></label>
-            <input type="file" id="fileUpload" accept=".json">
-        </div>
-
     </div>
 
     <div class="flex-child green">
         <div>
-            <canvas id="canvas" width="400px" height="400px">
-                <p>Ваш браузер не поддерживает рисование.</p>
-            </canvas>
+            <label for="roundColorPicker">Выберите цвет фигуры:</label>
+            <input type="color" value="#000000" id="roundColorPicker">
+        </div>
+
+        <div>
+            <label for="Screen">Выберете соотношение сторон полотна</label>
+            <select name="Screen" id="screen">
+                <option value="default">16:9</option>
+                <option value="defaultSquare">4:3</option>
+                <option value="square">1:1</option>
+                <option value="a4">1:1.414 (a4)</option>
+            </select>
+        </div>
+        <div>
+            <label><b>Скачайте json файл с настройками:</b></label>
+            <button onclick="downloadJson()">Скачать файл c Настройками</button>
         </div>
     </div>
 
+</div>
+
+<div>
+    <canvas id="canvas" width="400px" height="400px">
+        <p>Ваш браузер не поддерживает рисование.</p>
+    </canvas>
 </div>
 
 

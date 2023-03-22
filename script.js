@@ -9,12 +9,20 @@ const roundSizeSlider = document.getElementById('roundSizeSlider'),
     betweenPositionsSlider = document.getElementById('betweenPositionsSlider'),
     borderText = document.getElementById('borderText'),
     borderSlider = document.getElementById('borderSlider'),
-    canvas = document.getElementById('canvas')
-;
-canvas.width = window.innerWidth * 0.5;
-canvas.height = window.innerHeight * 0.5;
+    canvas = document.getElementById('canvas'),
+    screenProps = document.getElementById('screen');
 
-let roundSize = 100, roundColor = '000000', xPositions = 5, yPositions = 5, betweenPositions = 50, border = 50;
+canvas.width = window.innerWidth * 0.7;
+canvas.height = window.innerHeight * 0.7;
+
+let roundSize = 100,
+    roundColor = '000000',
+    xPositions = 5,
+    yPositions = 5,
+    betweenPositions = 50,
+    border = 50,
+    xSide = 16,
+    ySide = 9;
 let ctx = canvas.getContext('2d');
 
 redrawCanvas()
@@ -117,8 +125,42 @@ borderSlider.addEventListener('input', function () {
     redrawCanvas();
 })
 
+screenProps.addEventListener('input', function () {
+   let v = screenProps.value;
+
+   switch (v) {
+       case "default":{
+           xSide = 16;
+           ySide = 9;
+           break;
+       }
+
+       case "defaultSquare":{
+           xSide = 4;
+           ySide = 3;
+           break;
+       }
+
+       case "square":{
+           xSide = 1;
+           ySide = 1;
+           break;
+       }
+
+       case "a4":{
+           xSide = 1.414;
+           ySide = 1;
+           break;
+       }
+   }
+
+   redrawCanvas();
+})
 
 function redrawCanvas(){
+    let screenParts = xSide + ySide;
+    canvas.width = window.innerHeight * 2 / screenParts * xSide;
+    canvas.height = window.innerHeight * 2 / screenParts * ySide;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawPoints()
     ctx.strokeStyle = roundColor;
@@ -142,3 +184,15 @@ function drawPoints() {
     }
 }
 
+function downloadJson(){
+    let data = {
+
+    }
+
+    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+
+    const link = document.createElement("a");
+    link.setAttribute("href",dataStr);
+    link.setAttribute("download", "scene.json");
+    link.click();
+}
