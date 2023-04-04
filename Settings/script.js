@@ -85,6 +85,10 @@ unitsValue.addEventListener('input', function () {
     redrawCanvas()
 })
 
+randomSelector.addEventListener('input', function () {
+    random = randomSelector.value;
+})
+
 roundSizeText.addEventListener('input', function () {
     let v = roundSizeText.value
 

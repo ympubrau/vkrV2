@@ -162,9 +162,6 @@ canvas.addEventListener('mouseup', function (){
     }
 })
 
-canvas.addEventListener('click', function (){
-
-})
 
 function drawCircleBorder(x,y,r){
     selectedCircle = [x,y,r];
@@ -214,7 +211,5 @@ function minimumDist(c1){
         let temp = Math.floor(Math.sqrt((e[0] - c1[0]) * (e[0] - c1[0]) + (e[1] - c1[1]) * (e[1] - c1[1]))) - e[2] + 2;
         if (temp < dist) dist = temp;
     }
-
     return dist;
-
 }
