@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+</head>
+<body style="font-family: 'poppins', sans-serif;">
+
+<div id="startDiv" style=" width: 100%; margin-top: 20%; display: inline-block; text-align: center; vertical-align: middle">
+    <button style="margin: 0 auto 2em;" onclick="startTesting()">Начать тестирование</button><br>
+    <label for="input"><b>Загрузить настройки:</b></label>
+    <input type="file" id="input" accept="json" onchange="uploadFile(this)"/>
+</div>
+
+
+<div id="demo" style="width: 100%; height: 100vh; text-align:center;" hidden>
+    <canvas id="canvas" style="
+        padding-bottom: 2em;
+        margin: auto;
+        display: block;">
+    </canvas>
+    <div id="buttons">
+        <button hidden id="btn1"></button>
+        <button hidden id="btn2"></button>
+        <button hidden id="btn3"></button>
+        <button hidden id="btn4"></button>
+        <button hidden id="btn5"></button>
+        <button hidden id="btn6"></button>
+        <button hidden id="btn7"></button>
+    </div>
+</div>
+
+</body>
+<script src="script.js"></script>
+</html>

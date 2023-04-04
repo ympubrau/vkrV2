@@ -206,8 +206,6 @@ borderSlider.addEventListener('input', function () {
 
 for (let e of btnHelper){ e.addEventListener('input', setButtons) }
 
-
-
 function redrawCanvas(){
     let screenSize = window.innerHeight / 500;
     let betweenPositionsTemp, borderTemp, roundSizeTemp;
@@ -267,8 +265,7 @@ function setButtons(){
 function downloadJson(){
     let allocation = randomSelector.value;
     let btns = document.getElementsByClassName('btn');
-
-
+    
     let data = {
         units: units,
         random: allocation,
