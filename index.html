@@ -7,72 +7,148 @@
 </head>
 <body>
 
-<div class="flex-container">
 
+
+<div id="settings" class="flex-container">
     <div class="flex-child magenta">
         <div>
+            <label for="units">Выберите величину измерения</label>
+            <select name="Units" id="units">
+                <option value="pix">Пиксели</option>
+                <option value="proc">Проценты</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="allocation">Выберите распределение</label>
+            <select name="allocation" id="allocation">
+                <option value="true">Случайное</option>
+                <option value="false">По порядку</option>
+            </select>
+        </div>
+
+        <div>
             <label for="roundSizeSlider">Выберите диаметр круга:</label>
-            <input type="range" value="100" id="roundSizeSlider" min=10 max=500>
-            <input type="text" value="100" id="roundSizeText">
+            <input type="range" value="50" id="roundSizeSlider" min=10 max=500>
+            <input type="text" value="50" id="roundSizeText">
         </div>
 
         <div>
             <label for="xPositionsSlider">Выберите количество позиций по X:</label>
-            <input type="range" value="5" id="xPositionsSlider" min=1 max=12>
+            <input type="range" value="5" id="xPositionsSlider" min=1 max=25>
             <input type="text" value="5" id="xPositionsText">
         </div>
 
         <div>
             <label for="yPositionsSlider">Выберите количество позиций по Y:</label>
-            <input type="range" value="5" id="yPositionsSlider" min=1 max=12>
+            <input type="range" value="5" id="yPositionsSlider" min=1 max=25>
             <input type="text" value="5" id="yPositionsText">
         </div>
 
         <div>
             <label for="betweenPositionsSlider">Расстояние между центрами</label>
-            <input type="range" value="50" id="betweenPositionsSlider" min=20 max=100>
+            <input type="range" value="50" id="betweenPositionsSlider" min=20 max=200>
             <input type="text" value="50" id="betweenPositionsText">
         </div>
 
         <div>
             <label for="betweenPositionsSlider">Размер окружающего поля</label>
-            <input type="range" value="50" id="borderSlider" min=20 max=100>
+            <input type="range" value="50" id="borderSlider" min=20 max=200>
             <input type="text" value="50" id="borderText">
         </div>
     </div>
 
     <div class="flex-child green">
         <div>
-            <label for="roundColorPicker">Выберите цвет фигуры:</label>
+            <label for="roundColorPicker">Выберите цвет круга:</label>
             <input type="color" value="#000000" id="roundColorPicker">
         </div>
 
         <div>
-            <label for="Screen">Выберете соотношение сторон полотна</label>
-            <select name="Screen" id="screen">
-                <option value="default">16:9</option>
-                <option value="defaultSquare">4:3</option>
-                <option value="square">1:1</option>
-                <option value="a4">1:1.414 (a4)</option>
-            </select>
+            <label for="roundColorPicker">Выберите цвет полотна:</label>
+            <input type="color" value="#FFFFFF" id="canvasBackgroundColorPicker">
         </div>
+
+        <div>
+            <label for="roundColorPicker">Выберите цвет фона:</label>
+            <input type="color" value="#F5F5DC" id="backgroundColorPicker">
+        </div>
+
+        <div id="buttonsChoosing">
+            <label><b>Выберите состояния конфигурации:</b></label><br>
+            <section>
+                <label><b>1)</b></label>
+                <input type="text" value="Неподвижен" id="1">
+                <input class="btn 1" type="checkbox" name="scales" checked>
+            </section>
+
+            <section>
+                <label><b>5)</b></label>
+                <input type="text" value="Замедляется" id="5">
+                <input class="btn 5" type="checkbox" name="scales" checked>
+            </section>
+
+            <br>
+
+            <section>
+                <label><b>2)</b></label>
+                <input type="text" value="Начинает движение" id="2">
+                <input class="btn 2" type="checkbox" name="scales" checked>
+            </section>
+
+            <section>
+                <label><b>6)</b></label>
+                <input type="text" value="Заканчивает двжиение" id="6">
+                <input class="btn 6" type="checkbox" name="scales" checked>
+            </section>
+
+            <br>
+
+            <section>
+                <label><b>3)</b></label>
+                <input type="text" value="Ускоряется" id="3">
+                <input class="btn 3" type="checkbox" name="scales" checked>
+            </section>
+
+
+            <section>
+                <label><b>7)</b></label>
+                <input type="text" value="Левитирует" id="7">
+                <input class="btn 7" type="checkbox" name="scales" checked>
+            </section>
+
+            <br>
+
+            <section>
+                <label><b>4)</b></label>
+                <input type="text" value="Максимальная скорость" id="4">
+                <input class="btn 4" type="checkbox" name="scales" checked>
+            </section>
+        </div>
+
         <div>
             <label><b>Скачайте json файл с настройками:</b></label>
             <button onclick="downloadJson()">Скачать файл c Настройками</button>
         </div>
+
     </div>
 
 </div>
 
-<div>
+<div id="demo">
     <canvas id="canvas" width="400px" height="400px">
         <p>Ваш браузер не поддерживает рисование.</p>
     </canvas>
+    <div id="buttons">
+        <button hidden id="btn1" onclick="setButtons()"></button>
+        <button hidden id="btn2"></button>
+        <button hidden id="btn3"></button>
+        <button hidden id="btn4"></button>
+        <button hidden id="btn5"></button>
+        <button hidden id="btn6"></button>
+        <button hidden id="btn7"></button>
+    </div>
 </div>
-
-
-
-
 
 </body>
 <script src="script.js"></script>

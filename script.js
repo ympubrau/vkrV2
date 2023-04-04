@@ -1,6 +1,8 @@
 const roundSizeSlider = document.getElementById('roundSizeSlider'),
     roundSizeText = document.getElementById('roundSizeText'),
     roundColorPicker = document.getElementById('roundColorPicker'),
+    backgroundColorPicker = document.getElementById('backgroundColorPicker'),
+    canvasBackgroundColorPicker = document.getElementById('canvasBackgroundColorPicker'),
     xPositionsText = document.getElementById('xPositionsText'),
     xPositionsSlider = document.getElementById('xPositionsSlider'),
     yPositionsText = document.getElementById('yPositionsText'),
@@ -10,34 +12,90 @@ const roundSizeSlider = document.getElementById('roundSizeSlider'),
     borderText = document.getElementById('borderText'),
     borderSlider = document.getElementById('borderSlider'),
     canvas = document.getElementById('canvas'),
-    screenProps = document.getElementById('screen');
+    unitsValue = document.getElementById('units'),
+    targetDiv = document.getElementById('demo'),
+    randomSelector = document.getElementById('allocation'),
+    btnHelper = [
+        document.getElementById('1'),
+        document.getElementById('2'),
+        document.getElementById('3'),
+        document.getElementById('4'),
+        document.getElementById('5'),
+        document.getElementById('6'),
+        document.getElementById('7'),
+        ...document.getElementsByClassName('btn')
+    ];
 
-canvas.width = window.innerWidth * 0.7;
-canvas.height = window.innerHeight * 0.7;
-
-let roundSize = 100,
-    roundColor = '000000',
+let roundSize = 50,
+    units = 'pix',
+    roundColor = '#000000',
+    backgroundColor = '#F5F5DC',
+    canvasBackgroundColor = '#FFFFFF',
     xPositions = 5,
     yPositions = 5,
     betweenPositions = 50,
     border = 50,
-    xSide = 16,
-    ySide = 9;
-let ctx = canvas.getContext('2d');
+    random = false,
+    ctx = canvas.getContext('2d')
+;
 
+console.log(btnHelper)
 redrawCanvas()
+setButtons()
+
+unitsValue.addEventListener('input', function () {
+    units = unitsValue.value;
+    if (units === 'proc'){
+        for (let e of [roundSizeSlider,borderSlider,betweenPositionsSlider]){
+            e.setAttribute('min', '1');
+            e.setAttribute('max', '100');
+        }
+
+        roundSizeSlider.value = 20;
+        roundSizeText.value = 20;
+        roundSize = 20;
+
+        betweenPositionsSlider.value = 20;
+        betweenPositionsText.value = 20;
+        betweenPositions = 20;
+
+        borderSlider.value = 20;
+        borderText.value = 20;
+        border = 20;
+    }
+    else {
+        roundSizeSlider.setAttribute('min', '10');
+        roundSizeSlider.setAttribute('max', '500');
+        roundSizeSlider.value = 100;
+        roundSizeText.value = 100;
+        roundSize = 100;
+
+        betweenPositionsSlider.setAttribute('min', '20');
+        betweenPositionsSlider.setAttribute('max', '200');
+        betweenPositionsSlider.value = 50;
+        betweenPositionsText.value = 50;
+        betweenPositions = 50;
+
+        borderSlider.setAttribute('min', '20');
+        borderSlider.setAttribute('max', '200');
+        borderSlider.value = 50;
+        borderText.value = 50;
+        border = 50;
+    }
+    redrawCanvas()
+})
 
 roundSizeText.addEventListener('input', function () {
     let v = roundSizeText.value
-    if (v >= 500) {
-        roundSize = 500;
-        roundSizeText.value = 500;
-    }
-    else {
-        roundSize = v;
+
+    if (v >= +roundSizeSlider.getAttribute('max')) {
+        v = +roundSizeSlider.getAttribute('max');
+    } else if (v <= +roundSizeSlider.getAttribute('min')){
+        v = +roundSizeSlider.getAttribute('min')
     }
 
-    roundSizeSlider.value = roundSize;
+    roundSize = v;
+    roundSizeSlider.value = v;
     redrawCanvas();
 })
 
@@ -52,16 +110,26 @@ roundColorPicker.addEventListener('input', function () {
     redrawCanvas();
 })
 
+backgroundColorPicker.addEventListener('input', function () {
+    backgroundColor = backgroundColorPicker.value;
+    redrawCanvas();
+})
+
+canvasBackgroundColorPicker.addEventListener('input', function () {
+    canvasBackgroundColor = canvasBackgroundColorPicker.value;
+    redrawCanvas();
+})
+
 xPositionsText.addEventListener('input', function () {
     let v = xPositionsText.value
-    if (v >= 12) {
-        xPositions = 12;
-        xPositionsText.value = 12;
-    }
-    else {
-        xPositions = v;
+
+    if (v >= +xPositionsSlider.getAttribute('max')) {
+        v = +xPositionsSlider.getAttribute('max');
+    } else if (v <= +xPositionsSlider.getAttribute('min')){
+        v = +xPositionsSlider.getAttribute('min')
     }
 
+    xPositions = v;
     xPositionsSlider.value = xPositions;
     redrawCanvas();
 })
@@ -74,15 +142,15 @@ xPositionsSlider.addEventListener('input', function () {
 
 yPositionsText.addEventListener('input', function () {
     let v = yPositionsText.value
-    if (v >= 12) {
-        yPositions = 12;
-        yPositionsText.value = 12;
-    }
-    else {
-        yPositions = v;
+
+    if (v >= +yPositionsSlider.getAttribute('max')) {
+        v = +yPositionsSlider.getAttribute('max');
+    } else if (v <= +yPositionsSlider.getAttribute('min')){
+        v = +yPositionsSlider.getAttribute('min')
     }
 
-    yPositionsSlider.value = yPositions;
+    yPositions = v;
+    yPositionsSlider.value = v;
     redrawCanvas();
 })
 
@@ -94,16 +162,15 @@ yPositionsSlider.addEventListener('input', function () {
 
 betweenPositionsText.addEventListener('input', function () {
     let v = betweenPositionsText.value
+
+    if (v >= +betweenPositionsSlider.getAttribute('max')){
+        v = +betweenPositionsSlider.getAttribute('max')
+    } else if (v <= +betweenPositionsSlider.getAttribute('min')){
+        v = +betweenPositionsSlider.getAttribute('min')
+    }
+
     betweenPositions = v;
-    if (v < 20) {
-        betweenPositions = 20;
-        betweenPositionsText.value = 20;
-    }
-    else if (v > 100){
-        betweenPositions = 100;
-        betweenPositionsText.value = 100;
-    }
-    betweenPositionsSlider.value = betweenPositions;
+    betweenPositionsSlider.value = v;
     redrawCanvas();
 })
 
@@ -114,8 +181,16 @@ betweenPositionsSlider.addEventListener('input', function () {
 })
 
 borderText.addEventListener('input', function () {
-    border = borderText.value;
-    borderSlider.value = border;
+    let v = borderText.value
+
+    if (v > +borderSlider.getAttribute('max')){
+        v = +borderSlider.getAttribute('max')
+    } else if (v <= +borderSlider.getAttribute('min')){
+        v = +borderSlider.getAttribute('min')
+    }
+
+    border = v;
+    borderSlider.value = v;
     redrawCanvas();
 })
 
@@ -125,74 +200,97 @@ borderSlider.addEventListener('input', function () {
     redrawCanvas();
 })
 
-screenProps.addEventListener('input', function () {
-   let v = screenProps.value;
+for (let e of btnHelper){ e.addEventListener('input', setButtons) }
 
-   switch (v) {
-       case "default":{
-           xSide = 16;
-           ySide = 9;
-           break;
-       }
 
-       case "defaultSquare":{
-           xSide = 4;
-           ySide = 3;
-           break;
-       }
-
-       case "square":{
-           xSide = 1;
-           ySide = 1;
-           break;
-       }
-
-       case "a4":{
-           xSide = 1.414;
-           ySide = 1;
-           break;
-       }
-   }
-
-   redrawCanvas();
-})
 
 function redrawCanvas(){
-    let screenParts = xSide + ySide;
-    canvas.width = window.innerHeight * 2 / screenParts * xSide;
-    canvas.height = window.innerHeight * 2 / screenParts * ySide;
+    let screenSize = window.innerHeight / 500;
+    let betweenPositionsTemp, borderTemp, roundSizeTemp;
+
+    if (units === 'proc'){
+        roundSizeTemp = +roundSize * screenSize;
+        betweenPositionsTemp = betweenPositions * screenSize;
+        borderTemp = border * screenSize;
+        console.log(betweenPositionsTemp + " " + borderTemp)
+    }
+    else {
+        roundSizeTemp = +roundSize;
+        betweenPositionsTemp = +betweenPositions ;
+        borderTemp = +border;
+    }
+
+    targetDiv.style.backgroundColor = backgroundColor;
+
+    canvas.width = (xPositions - 1) * betweenPositionsTemp + (borderTemp * 2);
+    canvas.height = (yPositions - 1) * betweenPositionsTemp + (borderTemp * 2);
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawPoints()
+    ctx.rect(0,0,canvas.width, canvas.height)
+    ctx.fillStyle = canvasBackgroundColor;
+    ctx.fill();
+
+    ctx.strokeStyle = '#000000';
+    ctx.fillStyle = '#000000';
+    for (let i = 0; i < xPositions; i++){
+        for (let j = 0; j < yPositions; j++){
+            ctx.beginPath();
+            ctx.arc(borderTemp + i * betweenPositionsTemp, borderTemp + j * betweenPositionsTemp, 5, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.closePath();
+        }
+    }
+
     ctx.strokeStyle = roundColor;
     ctx.fillStyle = roundColor;
     ctx.beginPath();
-    ctx.arc(+border + +betweenPositions, +border + +betweenPositions, roundSize/2, 0, 2 * Math.PI);
+    ctx.arc(borderTemp, borderTemp, roundSizeTemp/2, 0, 2 * Math.PI);
     ctx.fill();
     ctx.closePath()
 }
 
-function drawPoints() {
-    for (let i = 0; i < xPositions; i++){
-        for (let j = 0; j < yPositions; j++){
-            ctx.strokeStyle = '#000000';
-            ctx.fillStyle = '#000000';
-            ctx.beginPath();
-            ctx.arc(+border + i * +betweenPositions, +border + j * +betweenPositions, 5, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.closePath()
-        }
+function setButtons(){
+    let btns = document.getElementsByClassName('btn');
+    for (let e of btns) {
+        let targetBtn = document.getElementById('btn' + e.classList[1]);
+        if (e.checked){
+            targetBtn.hidden = false;
+            targetBtn.innerHTML = document.getElementById(e.classList[1]).value;
+        } else targetBtn.hidden = true;
     }
 }
 
 function downloadJson(){
-    let data = {
+    let allocation = randomSelector.value;
+    let btns = document.getElementsByClassName('btn');
 
+
+    let data = {
+        units: units,
+        random: allocation,
+        roundSize: roundSize,
+        xPositions: xPositions,
+        yPositions: yPositions,
+        betweenPositions : betweenPositions,
+        border : border,
+        roundColor: roundColor,
+        canvasBackgroundColor : canvasBackgroundColor,
+        backgroundColor : backgroundColor,
+        buttons : []
+    }
+
+    for (let e of btns) {
+        let targetBtn = document.getElementById('btn' + e.classList[1]);
+        if (e.checked){
+            targetBtn.innerHTML = document.getElementById(e.classList[1]).value;
+            data.buttons.push([e.classList[1], targetBtn.innerText]);
+        }
     }
 
     let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
 
     const link = document.createElement("a");
     link.setAttribute("href",dataStr);
-    link.setAttribute("download", "scene.json");
+    link.setAttribute("download", "settings.json");
     link.click();
 }
