@@ -143,12 +143,11 @@ function testing(){
     }
     else {
         document.getElementById('buttons').hidden = true;
-        let d = document.getElementById('results');
-        d.hidden = false;
+        document.getElementById('results').hidden = false;
         ctx.width = canvas.width - border*2;
         ctx.height = canvas.height - border*2;
+        ctx.fillStyle = canvasBackgroundColor;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#FFFFFF';
         ctx.fill();
         for (let i = 0; i < positions.length; i++){
             switch (positions[i][2]){
