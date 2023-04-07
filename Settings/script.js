@@ -35,11 +35,10 @@ let roundSize = 50,
     yPositions = 5,
     betweenPositions = 50,
     border = 50,
-    random = false,
+    random = true,
     ctx = canvas.getContext('2d')
 ;
 
-console.log(btnHelper)
 redrawCanvas()
 setButtons()
 
@@ -214,7 +213,6 @@ function redrawCanvas(){
         roundSizeTemp = +roundSize * screenSize;
         betweenPositionsTemp = betweenPositions * screenSize;
         borderTemp = border * screenSize;
-        console.log(betweenPositionsTemp + " " + borderTemp)
     }
     else {
         roundSizeTemp = +roundSize;

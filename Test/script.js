@@ -11,6 +11,8 @@ let roundSize = 50,
     border = 50,
     random = false,
     ctx = canvas.getContext('2d'),
+    positions =[],
+    currentIndex = 0;
     buttons = [
         ['1', 'Неподвижен'],
         ['5', 'Замедляется'],
@@ -20,12 +22,6 @@ let roundSize = 50,
         ['7', 'Левитирует'],
         ['4', 'Максимальная скорость']]
 ;
-
-function startTesting(){
-    document.getElementById('startDiv').style.display = 'none';
-    document.getElementById('demo').hidden = false;
-    redrawCanvas();
-}
 
 function uploadFile(inp) {
     let file = inp.files[0];
@@ -70,8 +66,11 @@ function redrawCanvas(){
         betweenPositionsTemp = +betweenPositions ;
         borderTemp = +border;
     }
+    betweenPositions = betweenPositionsTemp;
+    roundSize = roundSizeTemp;
+    border = borderTemp;
 
-    document.getElementById('demo').style.backgroundColor = backgroundColor;
+    document.getElementsByTagName('body')[0].style.backgroundColor = backgroundColor;
 
     canvas.width = (xPositions - 1) * betweenPositionsTemp + (borderTemp * 2);
     canvas.height = (yPositions - 1) * betweenPositionsTemp + (borderTemp * 2);
@@ -85,12 +84,19 @@ function redrawCanvas(){
     ctx.fillStyle = '#000000';
     for (let i = 0; i < xPositions; i++){
         for (let j = 0; j < yPositions; j++){
-            ctx.beginPath();
-            ctx.arc(borderTemp + i * betweenPositionsTemp, borderTemp + j * betweenPositionsTemp, 5, 0, 2 * Math.PI);
-            ctx.fill();
-            ctx.closePath();
+            positions.push([borderTemp + i * betweenPositionsTemp,borderTemp + j * betweenPositionsTemp])
         }
     }
+
+    if (random){
+        for (let i = positions.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            let temp = positions[i];
+            positions[i] = positions[j];
+            positions[j] = temp;
+        }
+    }
+    console.log(positions)
 
     ctx.strokeStyle = roundColor;
     ctx.fillStyle = roundColor;
@@ -100,8 +106,80 @@ function redrawCanvas(){
     ctx.closePath()
 
     for (let e of buttons){
-       let temp = document.getElementById('btn' + e[0])
+        let temp = document.getElementById('btn' + e[0])
         temp.hidden = false;
         temp.innerHTML = e[1];
+        temp.addEventListener('click', function (){
+            console.log('pressed')
+            if (currentIndex < positions.length) positions[currentIndex].push(temp.id);
+            testing()
+        })
+    }
+    canvas.style.paddingTop = `${(window.innerHeight - canvas.offsetHeight)/2}px`;
+}
+
+
+function startTesting(){
+    document.getElementById('startDiv').style.display = 'none';
+    document.getElementById('demo').hidden = false;
+    currentIndex = 0;
+    redrawCanvas();
+}
+
+function testing(){
+    if (currentIndex !== positions.length){
+        ctx.rect(0,0,canvas.width, canvas.height)
+        ctx.fillStyle = canvasBackgroundColor;
+        ctx.fill();
+        ctx.strokeStyle = roundColor;
+        ctx.fillStyle = roundColor;
+        ctx.beginPath();
+        ctx.arc(positions[currentIndex][1], positions[currentIndex][0], roundSize/2, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.closePath()
+        console.log(currentIndex);
+        console.log(positions)
+        currentIndex++;
+    }
+    else {
+        document.getElementById('buttons').hidden = true;
+        let d = document.getElementById('results');
+        d.hidden = false;
+        ctx.width = canvas.width - border*2;
+        ctx.height = canvas.height - border*2;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fill();
+        for (let i = 0; i < positions.length; i++){
+            switch (positions[i][2]){
+                case 'btn1':
+                    ctx.fillStyle = '#FFFFFF';
+                    break;
+                case 'btn2':
+                    ctx.fillStyle = '#d5d5d5';
+                    break;
+                case 'btn3':
+                    ctx.fillStyle = '#b0b0b0';
+                    break;
+                case 'btn4':
+                    ctx.fillStyle = '#858585';
+                    break;
+                case 'btn5':
+                    ctx.fillStyle = '#646464';
+                    break;
+                case 'btn6':
+                    ctx.fillStyle = '#444444';
+                    break;
+                case 'btn7':
+                    ctx.fillStyle = '#000000';
+                    break;
+            }
+            ctx.beginPath();
+            ctx.rect(positions[i][0] - betweenPositions/2, positions[i][1] - betweenPositions/2, betweenPositions, betweenPositions);
+            ctx.fill();
+            ctx.closePath()
+            document.getElementById('results').innerHTML +=
+                `<div>(${positions[i][0]};${positions[i][0]}) - ${positions[i][2]} </div>`
+        }
     }
 }
