@@ -134,7 +134,7 @@ function testing(){
         ctx.strokeStyle = roundColor;
         ctx.fillStyle = roundColor;
         ctx.beginPath();
-        ctx.arc(positions[currentIndex][1], positions[currentIndex][0], roundSize/2, 0, 2 * Math.PI);
+        ctx.arc(positions[currentIndex][0], positions[currentIndex][1], roundSize/2, 0, 2 * Math.PI);
         ctx.fill();
         ctx.closePath()
         console.log(currentIndex);
