@@ -13,8 +13,8 @@ ctx.canvas.height = window.innerHeight;
 
 canvas.addEventListener("mousemove", function (event) {
     let rect = canvas.getBoundingClientRect();
-    mouse.x = Math.round((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width);
-    mouse.y = Math.round((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height);
+    mouse.x = ((event.clientX - rect.left) / (rect.right - rect.left) * canvas.width);
+    mouse.y = ((event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height);
     if (ifCircleSelected){
         let i = findCircle(selectedCircle);
         if (i === -1) return;
@@ -80,6 +80,11 @@ canvas.addEventListener("mousemove", function (event) {
                 let newR = selectedCircle[2] + m;
                 if (newR >= min) return;
 
+                if (!(selectedCircle[0] - newR > 0 &&
+                    selectedCircle[0] + newR < canvas.width &&
+                    selectedCircle[1] + newR < canvas.height &&
+                    selectedCircle[1    ] - newR > 0)) return;
+
                 circles.splice(i,1)
                 selectedCircle = [selectedCircle[0], selectedCircle[1], newR]
                 circles.push([selectedCircle[0], selectedCircle[1], newR])
@@ -89,6 +94,8 @@ canvas.addEventListener("mousemove", function (event) {
                 let c = circles[i]
                 let newMX = /*c[0] + mouseX - prevMouse.x*/ mouseX
                 let newMY = /*c[1] + mouseY - prevMouse.y*/ mouseY
+                if (!(newMX - c[2] > 0 && newMX + c[2] < canvas.width && newMY + c[2] < canvas.height && newMY - c[2] > 0))
+                    return;
 
                 circles.splice(i,1)
 
@@ -139,11 +146,14 @@ canvas.addEventListener('mousedown', function (){
     }
 
     if (!intersection && !ifCircleSelected){
-        circles.push([mouseX,mouseY, 20])
-        drawCircle(mouseX, mouseY, 20)
-        redrawCanvas()
-        ifCircleSelected = false;
-        return;
+        console.log(mouseY + " " + mouseX)
+        if (mouseX - 20 > 0 && mouseX + 20 < canvas.width && mouseY + 20 < canvas.height && mouseY - 20 > 0){
+            circles.push([mouseX,mouseY, 20])
+            drawCircle(mouseX, mouseY, 20)
+            redrawCanvas()
+            ifCircleSelected = false;
+            return;
+        }
     }
 
     if (!resizing){
@@ -162,6 +172,66 @@ canvas.addEventListener('mouseup', function (){
     }
 })
 
+window.addEventListener("keydown", (event) => {
+    console.log(event.code)
+    if (ifCircleSelected){
+        let e = event.code;
+        let i = findCircle(selectedCircle);
+        if (i === -1) return;
+
+        let temp;
+        let min;
+        switch (e) {
+            case "ArrowDown":
+                temp = selectedCircle[1] + 1;
+                min = minimumDist(selectedCircle) - selectedCircle[2] - 1;
+                console.log(min, min < 1)
+
+                if (temp + selectedCircle[2] > canvas.height) return;
+
+                if (min < 1)  selectedCircle = [selectedCircle[0], temp - 2, selectedCircle[2]]
+                else selectedCircle = [selectedCircle[0], temp, selectedCircle[2]]
+                break;
+
+            case "ArrowUp":
+                temp = selectedCircle[1] - 1;
+                min = minimumDist(selectedCircle) - selectedCircle[2] + 1;
+                console.log(min, min < 1)
+
+                if (temp - selectedCircle[2] < 0) return;
+
+                if (min < 1)  selectedCircle = [selectedCircle[0], temp + 2, selectedCircle[2]]
+                else selectedCircle = [selectedCircle[0], temp, selectedCircle[2]]
+                break;
+
+            case "ArrowLeft":
+                temp = selectedCircle[0] - 1;
+                min = minimumDist(selectedCircle) - selectedCircle[2] + 1;
+                console.log(min, min < 1)
+
+                if (temp - selectedCircle[2] < 0) return;
+
+                if (min < 1)  selectedCircle = [temp + 2, selectedCircle[1], selectedCircle[2]]
+                else selectedCircle = [temp, selectedCircle[1], selectedCircle[2]]
+                break;
+
+            case "ArrowRight":
+                temp = selectedCircle[0] + 1;
+                min = minimumDist(selectedCircle) - selectedCircle[2] - 1;
+                console.log(min, min < 1)
+
+                if (temp - selectedCircle[2] > canvas.width) return;
+
+                if (min < 1)  selectedCircle = [temp - 2, selectedCircle[1], selectedCircle[2]]
+                else  selectedCircle = [temp, selectedCircle[1], selectedCircle[2]]
+                break;
+        }
+        circles.splice(i,1);
+        circles.push([selectedCircle[0], selectedCircle[1], selectedCircle[2]])
+        redrawCanvas()
+        drawCircleBorder(selectedCircle[0], selectedCircle[1], selectedCircle[2])
+    }
+});
 
 function drawCircleBorder(x,y,r){
     selectedCircle = [x,y,r];
@@ -208,7 +278,7 @@ function minimumDist(c1){
 
     for (let e of circles) {
         if (e[0] === c1[0] && e[1] === c1[1]) continue;
-        let temp = Math.floor(Math.sqrt((e[0] - c1[0]) * (e[0] - c1[0]) + (e[1] - c1[1]) * (e[1] - c1[1]))) - e[2] + 2;
+        let temp = (Math.sqrt((e[0] - c1[0]) * (e[0] - c1[0]) + (e[1] - c1[1]) * (e[1] - c1[1]))) - e[2] + 2;
         if (temp < dist) dist = temp;
     }
     return dist;
