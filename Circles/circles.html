@@ -2,17 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Settings</title>
+    <title>Круговые композиции</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-<div>
-    <canvas id="canvas" width="30%" height="30%">
-        <p>Ваш браузер не поддерживает рисование.</p>
-    </canvas>
+
+<div id="startDiv" style=" width: 100%; margin-top: 20%; display: inline-block; text-align: center; vertical-align: middle">
+    <button style="margin: 0 auto 2em;" onclick="startTesting()">Начать тестирование</button><br>
+    <label for="input"><b>Загрузить настройки:</b></label>
+    <input type="file" id="input" accept="json" onchange="uploadFile(this)"/>
 </div>
+
+
+<div id="demo" style="width: 100%; height: 100vh; text-align:center;" hidden>
+    <canvas id="canvas" style="
+        margin: 2em auto ;
+        display: block;">
+    </canvas >
+    <button id="saveTest" style="margin: 2em auto;" onclick="saveComposition()">Сохранить композицию</button>
+    <button  id='newTest' style="margin: 2em auto;" onclick="newTest()" hidden>Новая композиция</button>
+    <button  id='endTest' style="margin: 2em auto;" onclick="endTesting()" hidden>Закончить тестирование</button>
+</div>
+
 </body>
 <script src="circlesScript.js"></script>
-
 </html>

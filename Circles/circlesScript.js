@@ -8,8 +8,97 @@ let ifCircleSelected = false;
 let selectedCircle;
 let resizing = false;
 let resizingDirection;
+let previousButton;
+let roundSize = 50,
+    units = 'pix',
+    roundColor = '#000000',
+    backgroundColor = '#F5F5DC',
+    canvasBackgroundColor = '#FFFFFF',
+    xPositions = 5,
+    yPositions = 5,
+    betweenPositions = 50,
+    border = 50,
+    random = false,
+    compositionResults = [],
+    circleResults = [],
+    buttons = []
+;
+
+
 ctx.canvas.width  = window.innerWidth;
 ctx.canvas.height = window.innerHeight;
+
+
+function uploadFile(inp) {
+    let file = inp.files[0];
+    let text;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+        text = JSON.parse(evt.target.result.toString());
+        applySettings(text);
+    };
+    reader.readAsText(file);
+}
+
+function applySettings(e) {
+    console.log(e)
+    roundSize = e.roundSize;
+    units = e.units;
+    roundColor = e.roundColor;
+    backgroundColor = e.backgroundColor;
+    canvasBackgroundColor = e.canvasBackgroundColor;
+    xPositions = e.xPositions;
+    yPositions = e.yPositions;
+    betweenPositions = e.betweenPositions;
+    border = e.border;
+    random = e.random;
+    buttons = e.buttons;
+    if (e.compositions) {
+        compositionResults = e.compositions;
+    }
+    if (e.circles) {
+        circleResults = e.circles
+    }
+}
+
+function drawFirstCanvas(){
+    let screenSize = window.innerHeight / 500;
+    let betweenPositionsTemp, borderTemp, roundSizeTemp;
+
+    if (units === 'proc'){
+        roundSizeTemp = +roundSize * screenSize;
+        betweenPositionsTemp = betweenPositions * screenSize;
+        borderTemp = border * screenSize;
+        console.log(betweenPositionsTemp + " " + borderTemp)
+    }
+    else {
+        roundSizeTemp = +roundSize;
+        betweenPositionsTemp = +betweenPositions ;
+        borderTemp = +border;
+    }
+
+    betweenPositions = betweenPositionsTemp;
+    roundSize = roundSizeTemp;
+    border = borderTemp;
+
+    document.getElementsByTagName('body')[0].style.backgroundColor = backgroundColor;
+
+    canvas.width = (xPositions - 1) * betweenPositionsTemp + (borderTemp * 2);
+    canvas.height = (yPositions - 1) * betweenPositionsTemp + (borderTemp * 2);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.rect(0,0,canvas.width, canvas.height)
+    ctx.fillStyle = canvasBackgroundColor;
+    ctx.fill();
+
+    canvas.style.marginTop = `${(window.innerHeight - canvas.offsetHeight)/2}px`;
+}
+
+function startTesting(){
+    document.getElementById('startDiv').style.display = 'none';
+    document.getElementById('demo').hidden = false;
+    drawFirstCanvas();
+}
 
 canvas.addEventListener("mousemove", function (event) {
     let rect = canvas.getBoundingClientRect();
@@ -173,7 +262,6 @@ canvas.addEventListener('mouseup', function (){
 })
 
 window.addEventListener("keydown", (event) => {
-    console.log(event.code)
     if (ifCircleSelected){
         let e = event.code;
         let i = findCircle(selectedCircle);
@@ -184,46 +272,54 @@ window.addEventListener("keydown", (event) => {
         switch (e) {
             case "ArrowDown":
                 temp = selectedCircle[1] + 1;
-                min = minimumDist(selectedCircle) - selectedCircle[2] - 1;
+                min = minimumDist(selectedCircle) - selectedCircle[2] - 2;
                 console.log(min, min < 1)
 
                 if (temp + selectedCircle[2] > canvas.height) return;
 
-                if (min < 1)  selectedCircle = [selectedCircle[0], temp - 2, selectedCircle[2]]
+                if (min < 1 && previousButton === 'ArrowDown')  selectedCircle = [selectedCircle[0], temp - 2, selectedCircle[2]]
                 else selectedCircle = [selectedCircle[0], temp, selectedCircle[2]]
+
+                previousButton = 'ArrowDown';
                 break;
 
             case "ArrowUp":
                 temp = selectedCircle[1] - 1;
-                min = minimumDist(selectedCircle) - selectedCircle[2] + 1;
+                min = minimumDist(selectedCircle) - selectedCircle[2] - 2;
                 console.log(min, min < 1)
 
                 if (temp - selectedCircle[2] < 0) return;
 
-                if (min < 1)  selectedCircle = [selectedCircle[0], temp + 2, selectedCircle[2]]
+                if (min < 1 && previousButton === 'ArrowUp')  selectedCircle = [selectedCircle[0], temp + 2, selectedCircle[2]]
                 else selectedCircle = [selectedCircle[0], temp, selectedCircle[2]]
+
+                previousButton = 'ArrowUp';
                 break;
 
             case "ArrowLeft":
                 temp = selectedCircle[0] - 1;
-                min = minimumDist(selectedCircle) - selectedCircle[2] + 1;
+                min = minimumDist(selectedCircle) - selectedCircle[2] - 2;
                 console.log(min, min < 1)
 
                 if (temp - selectedCircle[2] < 0) return;
 
-                if (min < 1)  selectedCircle = [temp + 2, selectedCircle[1], selectedCircle[2]]
+                if (min < 1 && previousButton === 'ArrowLeft')  selectedCircle = [temp + 2, selectedCircle[1], selectedCircle[2]]
                 else selectedCircle = [temp, selectedCircle[1], selectedCircle[2]]
+
+                previousButton = 'ArrowLeft';
                 break;
 
             case "ArrowRight":
                 temp = selectedCircle[0] + 1;
-                min = minimumDist(selectedCircle) - selectedCircle[2] - 1;
+                min = minimumDist(selectedCircle) - selectedCircle[2] - 2;
                 console.log(min, min < 1)
 
                 if (temp - selectedCircle[2] > canvas.width) return;
 
-                if (min < 1)  selectedCircle = [temp - 2, selectedCircle[1], selectedCircle[2]]
+                if (min < 1 && previousButton === 'ArrowRight')  selectedCircle = [temp - 2, selectedCircle[1], selectedCircle[2]]
                 else  selectedCircle = [temp, selectedCircle[1], selectedCircle[2]]
+
+                previousButton = 'ArrowRight';
                 break;
         }
         circles.splice(i,1);
@@ -245,7 +341,8 @@ function drawCircleBorder(x,y,r){
 
 
 function drawCircle(x,y,r){
-    ctx.strokeStyle = 'black';
+    ctx.strokeStyle = roundColor;
+    ctx.fillStyle = roundColor;
     ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.arc(x, y, r, 0, 2 * Math.PI);
@@ -282,4 +379,44 @@ function minimumDist(c1){
         if (temp < dist) dist = temp;
     }
     return dist;
+}
+
+function saveComposition(){
+    circleResults.push([...circles])
+    document.getElementById('endTest').hidden = false;
+    document.getElementById('newTest').hidden = false;
+    document.getElementById('saveTest').hidden = true;
+    circles = [];
+}
+
+function newTest(){
+    redrawCanvas()
+    document.getElementById('endTest').hidden = true;
+    document.getElementById('newTest').hidden = true;
+    document.getElementById('saveTest').hidden = false;
+}
+
+function endTesting(){
+    let data = {
+        units: units,
+        random: random,
+        roundSize: roundSize,
+        xPositions: xPositions,
+        yPositions: yPositions,
+        betweenPositions : betweenPositions,
+        border : border,
+        roundColor: roundColor,
+        canvasBackgroundColor : canvasBackgroundColor,
+        backgroundColor : backgroundColor,
+        buttons : buttons,
+        compositions : compositionResults,
+        circles : [...circleResults]
+    }
+
+    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+
+    const link = document.createElement("a");
+    link.setAttribute("href",dataStr);
+    link.setAttribute("download", "settings.json");
+    link.click();
 }

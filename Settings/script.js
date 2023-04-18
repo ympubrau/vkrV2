@@ -275,7 +275,9 @@ function downloadJson(){
         roundColor: roundColor,
         canvasBackgroundColor : canvasBackgroundColor,
         backgroundColor : backgroundColor,
-        buttons : []
+        buttons : [],
+        compositionResults: [],
+        circles: []
     }
 
     for (let e of btns) {

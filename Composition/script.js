@@ -11,8 +11,10 @@ let roundSize = 50,
     border = 50,
     random = false,
     ctx = canvas.getContext('2d'),
-    positions =[],
-    currentIndex = 0;
+    positions = [],
+    currentIndex = 0,
+    compositionResults = [],
+    circleResults = [],
     buttons = [
         ['1', 'Неподвижен'],
         ['5', 'Замедляется'],
@@ -48,8 +50,16 @@ function applySettings(e){
     border = e.border;
     random = e.random;
     buttons = e.buttons;
+    if (e.compositions) {
+        compositionResults = e.compositions;
+    }
+    if (e.circles) {
+        circleResults = e.circles
+    }
     console.log(buttons)
 }
+
+
 
 function redrawCanvas(){
     let screenSize = window.innerHeight / 500;
@@ -96,7 +106,6 @@ function redrawCanvas(){
             positions[j] = temp;
         }
     }
-    console.log(positions)
 
     ctx.strokeStyle = roundColor;
     ctx.fillStyle = roundColor;
@@ -104,25 +113,17 @@ function redrawCanvas(){
     ctx.arc(borderTemp, borderTemp, roundSizeTemp/2, 0, 2 * Math.PI);
     ctx.fill();
     ctx.closePath()
-
-    for (let e of buttons){
-        let temp = document.getElementById('btn' + e[0])
-        temp.hidden = false;
-        temp.innerHTML = e[1];
-        temp.addEventListener('click', function (){
-            console.log('pressed')
-            if (currentIndex < positions.length) positions[currentIndex].push(temp.id);
-            testing()
-        })
-    }
     canvas.style.paddingTop = `${(window.innerHeight - canvas.offsetHeight)/2}px`;
 }
 
 
 function startTesting(){
+    document.getElementById('results').hidden = true;
     document.getElementById('startDiv').style.display = 'none';
     document.getElementById('demo').hidden = false;
+    document.getElementById('buttons').hidden = false;
     currentIndex = 0;
+    positions = [];
     redrawCanvas();
 }
 
@@ -138,7 +139,6 @@ function testing(){
         ctx.fill();
         ctx.closePath()
         console.log(currentIndex);
-        console.log(positions)
         currentIndex++;
     }
     else {
@@ -177,8 +177,42 @@ function testing(){
             ctx.rect(positions[i][0] - betweenPositions/2, positions[i][1] - betweenPositions/2, betweenPositions, betweenPositions);
             ctx.fill();
             ctx.closePath()
-            document.getElementById('results').innerHTML +=
-                `<div>(${positions[i][0]};${positions[i][0]}) - ${positions[i][2]} </div>`
         }
+        compositionResults.push([...positions]);
     }
+}
+
+function endTesting(){
+    let data = {
+        units: units,
+        random: random,
+        roundSize: roundSize,
+        xPositions: xPositions,
+        yPositions: yPositions,
+        betweenPositions : betweenPositions,
+        border : border,
+        roundColor: roundColor,
+        canvasBackgroundColor : canvasBackgroundColor,
+        backgroundColor : backgroundColor,
+        buttons : buttons,
+        compositions : [...compositionResults],
+        circles : circleResults
+    }
+
+    let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+
+    const link = document.createElement("a");
+    link.setAttribute("href",dataStr);
+    link.setAttribute("download", "settings.json");
+    link.click();
+}
+
+for (let e of buttons){
+    let temp = document.getElementById('btn' + e[0])
+    temp.hidden = false;
+    temp.innerHTML = e[1];
+    temp.addEventListener('click', function (){
+        if (currentIndex < positions.length) positions[currentIndex].push(temp.id);
+        testing()
+    })
 }
