@@ -56,13 +56,11 @@ function displayAll() {
         <p>Рамка: ${border} ${units === 'proc' ? '%' : 'px'}</p>
         <p>Расстояние между центрами: ${betweenPositions} ${units === 'proc' ? '%' : 'px'}</p>
         <p>Позиции по X: ${xPositions} | Позиции по Y: ${yPositions}</p>
-        <p>Цвет круга: ${roundColor}</p>  
-        <p>Цвет полотна: ${canvasBackgroundColor}</p> 
-        <p>Цвет фона: ${backgroundColor}</p> 
-        <p>Состояния: </p>
+        <p>Цвет круга: ${roundColor} | Цвет полотна: ${canvasBackgroundColor} | Цвет фона: ${backgroundColor}</p>  
     `
+    d.innerHTML += 'Состояния: '
     for (let e of buttons){
-        d.innerHTML += `<p style="margin-left: 2em">${e[1]}</p>`
+        d.innerHTML += `${e[1]}, `
     }
 
     let screenSize = window.innerHeight / 500;
@@ -99,7 +97,7 @@ function displayAll() {
     else {
         d.innerHTML += '<p><b>Композиции с кругами:</b></p>'
         for (let i = 0; i < circleResults.length; i++){
-            d.innerHTML += `<canvas id="canvas${i + compositionResults.length}" style="border: 1px solid red" width="100" height="100"></canvas>`;
+            d.innerHTML += `<canvas id="canvas${i + compositionResults.length}"  width="100" height="100"></canvas>`;
         }
         for (let i = 0; i < circleResults.length; i++){
             drawCirclesCanvas(i + compositionResults.length, circleResults[i])
