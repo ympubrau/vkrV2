@@ -103,6 +103,7 @@ function displayAll() {
         }
         for (let i = 0; i < circleResults.length; i++){
             drawCirclesCanvas(i + compositionResults.length, circleResults[i])
+
         }
     }
 }
@@ -171,4 +172,23 @@ function drawCirclesCanvas(i,e){
         ctx.fill();
         ctx.closePath();
     }
+
+    let m = 0,mx = 0,my = 0, r = 0;
+    for (let q of e){
+        let sq = Math.PI * q[2] * q[2];
+        r += q[2];
+        m += sq;
+        mx += sq * q[0];
+        my += sq * q[1];
+    }
+    let x = mx / m;
+    let y = my / m;
+    let radius = r / e.length;
+
+    ctx.fillStyle = '#4728ff';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.closePath();
 }
