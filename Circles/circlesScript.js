@@ -63,23 +63,17 @@ function applySettings(e) {
 
 function drawFirstCanvas(){
     let screenSize = window.innerHeight / 500;
-    let betweenPositionsTemp, borderTemp, roundSizeTemp;
+    let betweenPositionsTemp, borderTemp;
 
     if (units === 'proc'){
-        roundSizeTemp = +roundSize * screenSize;
         betweenPositionsTemp = betweenPositions * screenSize;
         borderTemp = border * screenSize;
-        console.log(betweenPositionsTemp + " " + borderTemp)
     }
     else {
-        roundSizeTemp = +roundSize;
         betweenPositionsTemp = +betweenPositions ;
         borderTemp = +border;
     }
 
-    betweenPositions = betweenPositionsTemp;
-    roundSize = roundSizeTemp;
-    border = borderTemp;
 
     document.getElementsByTagName('body')[0].style.backgroundColor = backgroundColor;
 

@@ -1,6 +1,7 @@
 canvas = document.getElementById('canvas');
 
 let roundSize = 50,
+    tempRoundSize = roundSize,
     units = 'pix',
     roundColor = '#000000',
     backgroundColor = '#F5F5DC',
@@ -8,7 +9,9 @@ let roundSize = 50,
     xPositions = 5,
     yPositions = 5,
     betweenPositions = 50,
+    tempBetweenPositions = betweenPositions,
     border = 50,
+    tempBorder = border,
     random = false,
     ctx = canvas.getContext('2d'),
     positions = [],
@@ -56,34 +59,28 @@ function applySettings(e){
     if (e.circles) {
         circleResults = e.circles
     }
-    console.log(buttons)
+
+    let screenSize = window.innerHeight / 500;
+
+    if (units === 'proc'){
+        tempRoundSize = +roundSize * screenSize;
+        tempBetweenPositions = betweenPositions * screenSize;
+        tempBorder = border * screenSize;
+    }
+    else {
+        tempRoundSize = +roundSize;
+        tempBetweenPositions = +betweenPositions ;
+        tempBorder = +border;
+    }
 }
 
 
 
 function redrawCanvas(){
-    let screenSize = window.innerHeight / 500;
-    let betweenPositionsTemp, borderTemp, roundSizeTemp;
-
-    if (units === 'proc'){
-        roundSizeTemp = +roundSize * screenSize;
-        betweenPositionsTemp = betweenPositions * screenSize;
-        borderTemp = border * screenSize;
-        console.log(betweenPositionsTemp + " " + borderTemp)
-    }
-    else {
-        roundSizeTemp = +roundSize;
-        betweenPositionsTemp = +betweenPositions ;
-        borderTemp = +border;
-    }
-    betweenPositions = betweenPositionsTemp;
-    roundSize = roundSizeTemp;
-    border = borderTemp;
-
     document.getElementsByTagName('body')[0].style.backgroundColor = backgroundColor;
 
-    canvas.width = (xPositions - 1) * betweenPositionsTemp + (borderTemp * 2);
-    canvas.height = (yPositions - 1) * betweenPositionsTemp + (borderTemp * 2);
+    canvas.width = (xPositions - 1) * tempBetweenPositions + (tempBorder * 2);
+    canvas.height = (yPositions - 1) * tempBetweenPositions + (tempBorder * 2);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.rect(0,0,canvas.width, canvas.height)
@@ -94,7 +91,7 @@ function redrawCanvas(){
     ctx.fillStyle = '#000000';
     for (let i = 0; i < xPositions; i++){
         for (let j = 0; j < yPositions; j++){
-            positions.push([borderTemp + i * betweenPositionsTemp,borderTemp + j * betweenPositionsTemp])
+            positions.push([tempBorder + i * tempBetweenPositions,tempBorder + j * tempBetweenPositions])
         }
     }
 
@@ -107,45 +104,51 @@ function redrawCanvas(){
         }
     }
 
+    for (let e of buttons){
+        let d = document.getElementById('btn' + e[0]);
+        d.hidden = false;
+        d.innerHTML = e[1]
+    }
+
     ctx.strokeStyle = roundColor;
     ctx.fillStyle = roundColor;
     ctx.beginPath();
-    ctx.arc(borderTemp, borderTemp, roundSizeTemp/2, 0, 2 * Math.PI);
+    ctx.arc(positions[0][0], positions[0][1], tempRoundSize/2, 0, 2 * Math.PI);
     ctx.fill();
     ctx.closePath()
-    canvas.style.paddingTop = `${(window.innerHeight - canvas.offsetHeight)/2}px`;
+    canvas.style.paddingTop = `${(window.innerHeight - canvas.height)/2}px`;
 }
 
 
 function startTesting(){
     document.getElementById('results').hidden = true;
+    document.getElementById('buttons').hidden = false;
     document.getElementById('startDiv').style.display = 'none';
     document.getElementById('demo').hidden = false;
-    document.getElementById('buttons').hidden = false;
     currentIndex = 0;
     positions = [];
     redrawCanvas();
 }
 
 function testing(){
-    if (currentIndex !== positions.length){
+    if (currentIndex < positions.length - 1){
+        currentIndex++;
         ctx.rect(0,0,canvas.width, canvas.height)
         ctx.fillStyle = canvasBackgroundColor;
         ctx.fill();
         ctx.strokeStyle = roundColor;
         ctx.fillStyle = roundColor;
         ctx.beginPath();
-        ctx.arc(positions[currentIndex][0], positions[currentIndex][1], roundSize/2, 0, 2 * Math.PI);
+        ctx.arc(positions[currentIndex][0], positions[currentIndex][1], tempRoundSize/2, 0, 2 * Math.PI);
         ctx.fill();
         ctx.closePath()
         console.log(currentIndex);
-        currentIndex++;
     }
     else {
-        document.getElementById('buttons').hidden = true;
         document.getElementById('results').hidden = false;
-        ctx.width = canvas.width - border*2;
-        ctx.height = canvas.height - border*2;
+        document.getElementById('buttons').hidden = true;
+        ctx.width = canvas.width - tempBorder * 2;
+        ctx.height = canvas.height - tempBorder * 2;
         ctx.fillStyle = '#FFFFFF';
         ctx.rect(0, 0, canvas.width, canvas.height);
         ctx.fill();
@@ -174,7 +177,7 @@ function testing(){
                     break;
             }
             ctx.beginPath();
-            ctx.rect(positions[i][0] - betweenPositions/2, positions[i][1] - betweenPositions/2, betweenPositions, betweenPositions);
+            ctx.rect(positions[i][0] - tempBetweenPositions/2, positions[i][1] - tempBetweenPositions/2, tempBetweenPositions, tempBetweenPositions);
             ctx.fill();
             ctx.closePath()
         }
@@ -209,8 +212,6 @@ function endTesting(){
 
 for (let e of buttons){
     let temp = document.getElementById('btn' + e[0])
-    temp.hidden = false;
-    temp.innerHTML = e[1];
     temp.addEventListener('click', function (){
         if (currentIndex < positions.length) positions[currentIndex].push(temp.id);
         testing()

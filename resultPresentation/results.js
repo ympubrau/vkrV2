@@ -84,7 +84,7 @@ function displayAll() {
     else {
         d.innerHTML += '<p><b>Тепловые карты:</b></p>'
         for (let i = 0; i < compositionResults.length; i++){
-            d.innerHTML += `<canvas id="canvas${i}" width="100" height="100"></canvas>`;
+            d.innerHTML += `<canvas id="canvas${i}" style="" width="100" height="100"></canvas>`;
         }
         for (let i = 0; i < compositionResults.length; i++){
             drawCompositionCanvas(i,compositionResults[i])
@@ -99,7 +99,7 @@ function displayAll() {
     else {
         d.innerHTML += '<p><b>Композиции с кругами:</b></p>'
         for (let i = 0; i < circleResults.length; i++){
-            d.innerHTML += `<canvas id="canvas${i + compositionResults.length}" width="100" height="100"></canvas>`;
+            d.innerHTML += `<canvas id="canvas${i + compositionResults.length}" style="border: 1px solid red" width="100" height="100"></canvas>`;
         }
         for (let i = 0; i < circleResults.length; i++){
             drawCirclesCanvas(i + compositionResults.length, circleResults[i])
