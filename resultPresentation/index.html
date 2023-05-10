@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Результат</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="startDiv" style=" width: 100%; margin-top: 20%; text-align: center; vertical-align: middle">
@@ -10,9 +11,20 @@
 </div>
 
 <div id="results">
-    <div id="pars"></div>
-    <div id="compositions"></div>
-    <div id="circles"></div>
+    <details hidden>
+        <summary>Параметры</summary>
+        <div id="pars"></div>
+    </details>
+    <details hidden>
+        <summary id="compositionsSummary">Тепловые карты</summary>
+        <div id="compositions"></div>
+    </details>
+    <details hidden>
+        <summary id="circlesSummary">Копмозиции с кругами</summary>
+        <div id="circles"></div>
+    </details>
+    <div id="finalComps">
+    </div>
 </div>
 </body>
 <script src="results.js"></script>

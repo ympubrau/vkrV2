@@ -55,6 +55,8 @@ function applySettings(e) {
     buttons = e.buttons;
     if (e.compositions) {
         compositionResults = e.compositions;
+        if (compositionResults.length > 0)
+            document.getElementById('danger').hidden = true;
     }
     if (e.circles) {
         circleResults = e.circles
@@ -89,6 +91,12 @@ function drawFirstCanvas(){
 }
 
 function startTesting(){
+    if (compositionResults.length === 0) {
+        document.getElementById('danger').hidden = false;
+        return
+    }
+    document.getElementById('danger').hidden = true;
+
     document.getElementById('startDiv').style.display = 'none';
     document.getElementById('demo').hidden = false;
     drawFirstCanvas();

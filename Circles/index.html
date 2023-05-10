@@ -9,6 +9,7 @@
 <body>
 
 <div id="startDiv" style=" width: 100%; margin-top: 20%; display: inline-block; text-align: center; vertical-align: middle">
+    <p hidden id="danger" style="font-size: 20px; color: red">Сначала нужно пройти тестирование!</p>
     <button style="margin: 0 auto 2em;" onclick="startTesting()">Начать тестирование</button><br>
     <label for="input"><b>Загрузить настройки:</b></label>
     <input type="file" id="input" accept="json" onchange="uploadFile(this)"/>
