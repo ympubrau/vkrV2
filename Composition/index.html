@@ -7,9 +7,11 @@
 <body style="font-family: 'poppins', sans-serif;">
 
 <div id="startDiv" style=" width: 100%; margin-top: 20%; text-align: center; vertical-align: middle">
-    <button style="margin: 0 auto 2em;" onclick="startTesting()">Начать тестирование</button><br>
+    <p hidden id="danger" style="font-size: 20px; color: red">Нужно загрузить файл!</p>
     <label for="input"><b>Загрузить настройки:</b></label>
     <input type="file" id="input" accept="json" onchange="uploadFile(this)"/>
+    <br><br>
+    <button style="margin: 0 auto 2em;" onclick="startTesting()">Начать тестирование</button><br>
 </div>
 
 

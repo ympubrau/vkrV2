@@ -5,3 +5,11 @@ details{
 div {
     display: inline-block;
 }
+
+.circles {
+    border: 1px solid black;
+}
+
+.moved {
+    margin-right: 4em;
+}

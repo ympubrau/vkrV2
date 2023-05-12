@@ -84,17 +84,21 @@ function displayAll() {
         d.innerHTML = '<p><b>Композиций с кругами нет</b></p>'
     } else {
         for (let i = 0; i < circleResults.length; i++){
-            d.innerHTML += `<div id="${i}"></div>`;
+            d.innerHTML += `<div class="moved" id="${i}"></div>`;
         }
 
         for (let i = 0; i < circleResults.length; i++){
             d = document.getElementById(i)
-            d.innerHTML += `<canvas id="canvas${i}"  width="100" height="100"></canvas>`;
+            d.innerHTML += `<canvas class="circles" id="canvas${i}"  width="100" height="100"></canvas>`;
+            d.innerHTML += `<details id="details-${i}"><summary>Круги:</summary></details>`
         }
 
         for (let i = 0; i < circleResults.length; i++){
-            d = document.getElementById(i)
-            d.innerHTML += `<p>X: ${centers[i][0]} | Y : ${centers[i][1]} | R: ${centers[i][2]}</p>`;
+            d = document.getElementById('details-' + i)
+            for (let e of circleResults[i]){
+                d.innerHTML += `<p>X: ${(Math.round(e[0]))} | Y : ${(Math.round(e[1]))} | R: ${(Math.round(e[2]))}</p>`;
+            }
+            d.innerHTML += `<p style="color: blue"><b>X: ${centers[i][0]} | Y : ${centers[i][1]} | R: ${centers[i][2]}</b></p>`;
         }
 
         for (let i = 0; i < circleResults.length; i++) {
@@ -196,25 +200,25 @@ function drawCompositionCanvas(i,positions){
     for (let i = 0; i < positions.length; i++){
         switch (positions[i][2]){
             case 'btn1':
-                ctx.fillStyle = '#FFFFFF';
+                ctx.fillStyle = '#000000';
                 break;
             case 'btn2':
-                ctx.fillStyle = '#d5d5d5';
+                ctx.fillStyle = '#444444';
                 break;
             case 'btn3':
-                ctx.fillStyle = '#b0b0b0';
+                ctx.fillStyle = '#646464';
                 break;
             case 'btn4':
                 ctx.fillStyle = '#858585';
                 break;
             case 'btn5':
-                ctx.fillStyle = '#646464';
+                ctx.fillStyle = '#b0b0b0';
                 break;
             case 'btn6':
-                ctx.fillStyle = '#444444';
+                ctx.fillStyle = '#d5d5d5';
                 break;
             case 'btn7':
-                ctx.fillStyle = '#000000';
+                ctx.fillStyle = '#FFFFFF';
                 break;
         }
         ctx.beginPath();

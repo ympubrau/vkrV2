@@ -210,8 +210,6 @@ canvas.addEventListener("mousemove", function (event) {
     }
 });
 
-
-
 canvas.addEventListener('mousedown', function (){
     mouseDown = true;
     let mouseX = mouse.x;
@@ -340,7 +338,6 @@ function drawCircleBorder(x,y,r){
     ctx.stroke();
     ctx.closePath()
 }
-
 
 function drawCircle(x,y,r){
     ctx.strokeStyle = roundColor;

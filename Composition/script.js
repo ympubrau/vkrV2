@@ -18,6 +18,7 @@ let roundSize = 50,
     currentIndex = 0,
     compositionResults = [],
     circleResults = [],
+    fileUploaded = false,
     buttons = [
         ['1', 'Неподвижен'],
         ['5', 'Замедляется'],
@@ -72,9 +73,8 @@ function applySettings(e){
         tempBetweenPositions = +betweenPositions ;
         tempBorder = +border;
     }
+    fileUploaded = true;
 }
-
-
 
 function redrawCanvas(){
     document.getElementsByTagName('body')[0].style.backgroundColor = backgroundColor;
@@ -119,15 +119,20 @@ function redrawCanvas(){
     canvas.style.paddingTop = `${(window.innerHeight - canvas.height)/2}px`;
 }
 
-
 function startTesting(){
-    document.getElementById('results').hidden = true;
-    document.getElementById('buttons').hidden = false;
-    document.getElementById('startDiv').style.display = 'none';
-    document.getElementById('demo').hidden = false;
-    currentIndex = 0;
-    positions = [];
-    redrawCanvas();
+    if (fileUploaded) {
+        document.getElementById('results').hidden = true;
+        document.getElementById('danger').hidden = true;
+        document.getElementById('buttons').hidden = false;
+        document.getElementById('startDiv').style.display = 'none';
+        document.getElementById('demo').hidden = false;
+        currentIndex = 0;
+        positions = [];
+        redrawCanvas();
+    }
+    else {
+        document.getElementById('danger').hidden = false;
+    }
 }
 
 function testing(){
@@ -155,25 +160,25 @@ function testing(){
         for (let i = 0; i < positions.length; i++){
             switch (positions[i][2]){
                 case 'btn1':
-                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillStyle = '#000000';
                     break;
                 case 'btn2':
-                    ctx.fillStyle = '#d5d5d5';
+                    ctx.fillStyle = '#444444';
                     break;
                 case 'btn3':
-                    ctx.fillStyle = '#b0b0b0';
+                    ctx.fillStyle = '#646464';
                     break;
                 case 'btn4':
                     ctx.fillStyle = '#858585';
                     break;
                 case 'btn5':
-                    ctx.fillStyle = '#646464';
+                    ctx.fillStyle = '#b0b0b0';
                     break;
                 case 'btn6':
-                    ctx.fillStyle = '#444444';
+                    ctx.fillStyle = '#d5d5d5';
                     break;
                 case 'btn7':
-                    ctx.fillStyle = '#000000';
+                    ctx.fillStyle = '#FFFFFF';
                     break;
             }
             ctx.beginPath();
