@@ -13,7 +13,7 @@ let roundSize = 50,
     buttons = [],
     centers = []
 ;
-
+let qwe = [];
 function uploadFile(inp) {
     let file = inp.files[0];
     let text;
@@ -129,14 +129,15 @@ function displayAll() {
         for (let q = 0; q < compositionResults.length; q++) {
             d = document.getElementById(`${q + circleResults.length}`);
             d.innerHTML += '<br>'
-            for (let i = 0; i < xPositions; i++) {
-                for (let j = 0; j < yPositions; j++) {
-                    d.innerHTML += compositionResults[q][i * 5 + j][2].substring(3) - 1
+            for (let i = 0; i < yPositions; i++) {
+                console.log('qwe')
+                for (let j = 0; j < xPositions; j++) {
+                    d.innerHTML += compositionResults[q][i * xPositions + j][2].substring(3) - 1
+                    qwe.push([compositionResults[q][i * xPositions + j][2].substring(3) - 1])
                 }
                 d.innerHTML += '<br>'
             }
         }
-
         for (let q = 0; q < compositionResults.length; q++){
             drawCompositionCanvas(q + circleResults.length, compositionResults[q])
         }
@@ -198,6 +199,7 @@ function drawCompositionCanvas(i,positions){
     let ctx = setUpCanvas(i);
 
     for (let i = 0; i < positions.length; i++){
+        //qwe[i].push(positions[i][2].substring(3) - 1)
         switch (positions[i][2]){
             case 'btn1':
                 ctx.fillStyle = '#000000';
