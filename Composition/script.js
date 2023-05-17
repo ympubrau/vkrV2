@@ -158,29 +158,8 @@ function testing(){
         ctx.rect(0, 0, canvas.width, canvas.height);
         ctx.fill();
         for (let i = 0; i < positions.length; i++){
-            switch (positions[i][2]){
-                case 'btn1':
-                    ctx.fillStyle = '#000000';
-                    break;
-                case 'btn2':
-                    ctx.fillStyle = '#444444';
-                    break;
-                case 'btn3':
-                    ctx.fillStyle = '#646464';
-                    break;
-                case 'btn4':
-                    ctx.fillStyle = '#858585';
-                    break;
-                case 'btn5':
-                    ctx.fillStyle = '#b0b0b0';
-                    break;
-                case 'btn6':
-                    ctx.fillStyle = '#d5d5d5';
-                    break;
-                case 'btn7':
-                    ctx.fillStyle = '#FFFFFF';
-                    break;
-            }
+            let c = ((positions[i][2].slice(-1)) - 1) *  (255 / (buttons.length -1))
+            ctx.fillStyle = `rgba(${c},${c},${c},100)`
             ctx.beginPath();
             ctx.rect(positions[i][0] - tempBetweenPositions/2, positions[i][1] - tempBetweenPositions/2, tempBetweenPositions, tempBetweenPositions);
             ctx.fill();

@@ -13,3 +13,10 @@ div {
 .moved {
     margin-right: 4em;
 }
+
+td {
+    width: 2em;
+}
+th {
+    text-align: left;
+}

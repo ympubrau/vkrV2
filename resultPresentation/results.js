@@ -90,15 +90,31 @@ function displayAll() {
         for (let i = 0; i < circleResults.length; i++){
             d = document.getElementById(i)
             d.innerHTML += `<canvas class="circles" id="canvas${i}"  width="100" height="100"></canvas>`;
-            d.innerHTML += `<details id="details-${i}"><summary>Круги:</summary></details>`
+            console.log(centers[i], ((xPositions - 1) * betweenPositions + border * 2), ((yPositions - 1) * betweenPositions + border * 2))
+            d.innerHTML += `<p>Смещение центра масс: ${ centers[i][0] - ((xPositions - 1) * betweenPositions + border * 2)/2} 
+                                                     ${((yPositions - 1) * betweenPositions + border * 2)/2 - centers[i][1]}</p>`
+            d.innerHTML += `<details id="details-${i}">
+                                <summary>Круги:</summary>
+                                    <table>
+                                        <thead>
+                                            <th>X</th>
+                                            <th>Y</th>
+                                            <th>R</th>
+                                        </thead>
+                                        <tbody id="table-${i}"></tbody>
+                                    </table>
+                            </details>`
         }
 
+
         for (let i = 0; i < circleResults.length; i++){
-            d = document.getElementById('details-' + i)
+            d = document.getElementById('table-' + i)
             for (let e of circleResults[i]){
-                d.innerHTML += `<p>X: ${(Math.round(e[0]))} | Y : ${(Math.round(e[1]))} | R: ${(Math.round(e[2]))}</p>`;
+                d.innerHTML += `<td>${(Math.round(e[0]))}</td><td>${(Math.round(e[1]))}</td><td>${(Math.round(e[2]))}</td>`;
             }
-            d.innerHTML += `<p style="color: blue"><b>X: ${centers[i][0]} | Y : ${centers[i][1]} | R: ${centers[i][2]}</b></p>`;
+            d.innerHTML += `<td style="color: blue"><b>${(Math.round(centers[i][0]))}</b></td>
+                            <td style="color: blue"><b>${(Math.round(centers[i][0]))}</b></td>
+                            <td style="color: blue"><b>${(Math.round(centers[i][0]))}</b></td>`;
         }
 
         for (let i = 0; i < circleResults.length; i++) {
@@ -195,36 +211,15 @@ function displayAll() {
     }
 }
 
-function drawCompositionCanvas(i,positions){
-    let ctx = setUpCanvas(i);
+function drawCompositionCanvas(w,positions){
+    let ctx = setUpCanvas(w);
 
-    for (let i = 0; i < positions.length; i++){
-        //qwe[i].push(positions[i][2].substring(3) - 1)
-        switch (positions[i][2]){
-            case 'btn1':
-                ctx.fillStyle = '#000000';
-                break;
-            case 'btn2':
-                ctx.fillStyle = '#444444';
-                break;
-            case 'btn3':
-                ctx.fillStyle = '#646464';
-                break;
-            case 'btn4':
-                ctx.fillStyle = '#858585';
-                break;
-            case 'btn5':
-                ctx.fillStyle = '#b0b0b0';
-                break;
-            case 'btn6':
-                ctx.fillStyle = '#d5d5d5';
-                break;
-            case 'btn7':
-                ctx.fillStyle = '#FFFFFF';
-                break;
-        }
+    for (let e of positions){
+        let c = ((e[2].slice(-1)) - 1) *  (255 / (buttons.length -1))
+        ctx.fillStyle = `rgba(${c},${c},${c},100)`
+
         ctx.beginPath();
-        ctx.rect(positions[i][0] - betweenPositions/2 - border/2, positions[i][1] - betweenPositions/2 - border/2, betweenPositions, betweenPositions);
+        ctx.rect(e[0] - betweenPositions/2 - border/2, e[1] - betweenPositions/2 - border/2, betweenPositions, betweenPositions);
         ctx.fill();
         ctx.closePath()
     }
@@ -244,6 +239,21 @@ function drawCirclesCanvas(i,e){
     }
 
     drawMassCenter(centers[i], ctx)
+
+    ctx.strokeStyle = '#444444';
+    ctx.fillStyle = '#7c7c7c';
+    let w = (xPositions - 1) * betweenPositions + border * 2;
+    let h = (yPositions - 1) * betweenPositions + border * 2;
+
+    ctx.beginPath();
+    ctx.moveTo(w/2, 0);
+    ctx.lineTo(w/2, h);
+    ctx.stroke();
+    ctx.moveTo(0, h/2);
+    ctx.lineTo(w, h/2)
+    ctx.stroke();
+    ctx.closePath()
+
 }
 
 function drawMassCenter(e, ctx) {
