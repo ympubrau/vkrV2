@@ -141,17 +141,19 @@ function displayAll() {
             d = document.getElementById(`${i + circleResults.length}`);
             d.innerHTML += `<canvas id="canvas${i  + circleResults.length}"  width="100" height="100"></canvas>`;
         }
-
         for (let q = 0; q < compositionResults.length; q++) {
             d = document.getElementById(`${q + circleResults.length}`);
-            d.innerHTML += '<br>'
+            d.innerHTML += `<table><tbody id="tableMaps-${q}"></tbody></table>`
+            d = document.getElementById('tableMaps-' + q);
+            for (let i = 0; i < yPositions; i++) d.innerHTML += `<tr id="tableMaps-${q}-row-${i}"></tr>`
+        }
+
+        for (let q = 0; q < compositionResults.length; q++) {
             for (let i = 0; i < yPositions; i++) {
-                console.log('qwe')
+                d = document.getElementById(`tableMaps-${q}-row-${i}`);
                 for (let j = 0; j < xPositions; j++) {
-                    d.innerHTML += compositionResults[q][i * xPositions + j][2].substring(3) - 1
-                    qwe.push([compositionResults[q][i * xPositions + j][2].substring(3) - 1])
+                    d.innerHTML += `<td>${compositionResults[q][i * xPositions + j][2].substring(3) - 1}</td>`
                 }
-                d.innerHTML += '<br>'
             }
         }
         for (let q = 0; q < compositionResults.length; q++){
