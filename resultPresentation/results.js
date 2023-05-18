@@ -113,8 +113,8 @@ function displayAll() {
                 d.innerHTML += `<td>${(Math.round(e[0]))}</td><td>${(Math.round(e[1]))}</td><td>${(Math.round(e[2]))}</td>`;
             }
             d.innerHTML += `<td style="color: blue"><b>${(Math.round(centers[i][0]))}</b></td>
-                            <td style="color: blue"><b>${(Math.round(centers[i][0]))}</b></td>
-                            <td style="color: blue"><b>${(Math.round(centers[i][0]))}</b></td>`;
+                            <td style="color: blue"><b>${(Math.round(centers[i][1]))}</b></td>
+                            <td style="color: blue"><b>${(Math.round(centers[i][2]))}</b></td>`;
         }
 
         for (let i = 0; i < circleResults.length; i++) {
@@ -228,8 +228,8 @@ function drawCompositionCanvas(w,positions){
 function drawCirclesCanvas(i,e){
     let ctx = setUpCanvas(i, true);
 
-    ctx.strokeStyle = roundColor;
-    ctx.fillStyle = roundColor;
+    ctx.strokeStyle = '#000000';
+    ctx.fillStyle = '#000000';
     for (let q of e){
         ctx.lineWidth = 3;
         ctx.beginPath();
