@@ -210,45 +210,48 @@ canvas.addEventListener("mousemove", function (event) {
     }
 });
 
-canvas.addEventListener('mousedown', function (){
-    mouseDown = true;
-    let mouseX = mouse.x;
-    let mouseY = mouse.y;
-    let intersection = false;
-    let isInCircle = false;
-    if (resizing) return;
+canvas.addEventListener('mousedown', function (e){
 
-    for (let e of circles){
-        if (!intersection){
-            intersection = circleIntersection([mouseX,mouseY,20],e);
-        }
-        if ((mouseX >= e[0] - e[2] && mouseX <= e[0] + e[2]) && (mouseY >= e[1] - e[2] && mouseY <= e[1] + e[2])) {
-            if (selectedCircle !== e){
-                redrawCanvas();
+    if (e.button === 0){
+        mouseDown = true;
+        let mouseX = mouse.x;
+        let mouseY = mouse.y;
+        let intersection = false;
+        let isInCircle = false;
+        if (resizing) return;
+
+        for (let e of circles){
+            if (!intersection){
+                intersection = circleIntersection([mouseX,mouseY,20],e);
             }
-            isInCircle = true;
-            ifCircleSelected = true;
-            console.log(ifCircleSelected);
-            drawCircleBorder(e[0],e[1],e[2])
-            return;
+            if ((mouseX >= e[0] - e[2] && mouseX <= e[0] + e[2]) && (mouseY >= e[1] - e[2] && mouseY <= e[1] + e[2])) {
+                if (selectedCircle !== e){
+                    redrawCanvas();
+                }
+                isInCircle = true;
+                ifCircleSelected = true;
+                console.log(ifCircleSelected);
+                drawCircleBorder(e[0],e[1],e[2])
+                return;
+            }
         }
-    }
 
-    if (!intersection && !ifCircleSelected){
-        console.log(mouseY + " " + mouseX)
-        if (mouseX - 20 > 0 && mouseX + 20 < canvas.width && mouseY + 20 < canvas.height && mouseY - 20 > 0){
-            circles.push([mouseX,mouseY, 20])
-            drawCircle(mouseX, mouseY, 20)
-            redrawCanvas()
+        if (!intersection && !ifCircleSelected){
+            console.log(mouseY + " " + mouseX)
+            if (mouseX - 20 > 0 && mouseX + 20 < canvas.width && mouseY + 20 < canvas.height && mouseY - 20 > 0){
+                circles.push([mouseX,mouseY, 20])
+                drawCircle(mouseX, mouseY, 20)
+                redrawCanvas()
+                ifCircleSelected = false;
+                return;
+            }
+        }
+
+        if (!resizing){
             ifCircleSelected = false;
-            return;
+            selectedCircle = [];
+            redrawCanvas();
         }
-    }
-
-    if (!resizing){
-        ifCircleSelected = false;
-        selectedCircle = [];
-        redrawCanvas();
     }
 })
 
@@ -261,7 +264,19 @@ canvas.addEventListener('mouseup', function (){
     }
 })
 
+canvas.oncontextmenu = function () {
+    console.log(selectedCircle)
+    if (ifCircleSelected) {
+        let i = findCircle(selectedCircle);
+        circles.splice(i,1)
+        selectedCircle = [];
+        ifCircleSelected = false;
+        redrawCanvas()
+    }
+}
+
 window.addEventListener("keydown", (event) => {
+    console.log(event.code)
     if (ifCircleSelected){
         let e = event.code;
         let i = findCircle(selectedCircle);
@@ -270,7 +285,7 @@ window.addEventListener("keydown", (event) => {
         let temp;
         let min;
         switch (e) {
-            case "ArrowDown":
+            case "ArrowDown" || "Numpad2":
                 temp = selectedCircle[1] + 1;
                 min = minimumDist(selectedCircle) - selectedCircle[2] - 2;
                 console.log(min, min < 1)
@@ -283,7 +298,7 @@ window.addEventListener("keydown", (event) => {
                 previousButton = 'ArrowDown';
                 break;
 
-            case "ArrowUp":
+            case "ArrowUp" || "Numpad8":
                 temp = selectedCircle[1] - 1;
                 min = minimumDist(selectedCircle) - selectedCircle[2] - 2;
                 console.log(min, min < 1)
@@ -296,7 +311,7 @@ window.addEventListener("keydown", (event) => {
                 previousButton = 'ArrowUp';
                 break;
 
-            case "ArrowLeft":
+            case "ArrowLeft" || "Numpad4":
                 temp = selectedCircle[0] - 1;
                 min = minimumDist(selectedCircle) - selectedCircle[2] - 2;
                 console.log(min, min < 1)
@@ -309,7 +324,7 @@ window.addEventListener("keydown", (event) => {
                 previousButton = 'ArrowLeft';
                 break;
 
-            case "ArrowRight":
+            case "ArrowRight" || "Numpad6":
                 temp = selectedCircle[0] + 1;
                 min = minimumDist(selectedCircle) - selectedCircle[2] - 2;
                 console.log(min, min < 1)
