@@ -129,8 +129,13 @@
         <div>
             <label><b>Скачайте json файл с настройками:</b></label>
             <button onclick="downloadJson()">Скачать</button>
+
         </div>
 
+        <div>
+            <label for="input"><b>Загрузить настройки:</b></label>
+            <input type="file" id="input" accept="json" onchange="uploadFile(this)"/>
+        </div>
     </div>
 
 </div>

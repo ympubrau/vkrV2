@@ -57,6 +57,8 @@ function applySettings(e) {
         compositionResults = e.compositions;
         if (compositionResults.length > 0)
             document.getElementById('danger').hidden = true;
+        else
+            document.getElementById('danger').innerHTML = 'Сначала нужно пройти тестирование'
     }
     if (e.circles) {
         circleResults = e.circles
@@ -211,7 +213,6 @@ canvas.addEventListener("mousemove", function (event) {
 });
 
 canvas.addEventListener('mousedown', function (e){
-
     if (e.button === 0){
         mouseDown = true;
         let mouseX = mouse.x;

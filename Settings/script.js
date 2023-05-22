@@ -16,6 +16,7 @@ const roundSizeSlider = document.getElementById('roundSizeSlider'),
     targetDiv = document.getElementById('demo'),
     randomSelector = document.getElementById('allocation'),
     btnHelper = [
+        ...document.getElementsByClassName('btn'),
         document.getElementById('1'),
         document.getElementById('2'),
         document.getElementById('3'),
@@ -23,7 +24,7 @@ const roundSizeSlider = document.getElementById('roundSizeSlider'),
         document.getElementById('5'),
         document.getElementById('6'),
         document.getElementById('7'),
-        ...document.getElementsByClassName('btn')
+
     ];
 
 let roundSize = 50,
@@ -294,4 +295,87 @@ function downloadJson(){
     link.setAttribute("href",dataStr);
     link.setAttribute("download", "settings.json");
     link.click();
+}
+
+function uploadFile(inp) {
+    let file = inp.files[0];
+    let text;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+        text = JSON.parse(evt.target.result.toString());
+        applySettings(text);
+    };
+    reader.readAsText(file);
+}
+
+function applySettings(e){
+    /*
+    if (e.compositions || e.circles) {
+        if (e.compositions.length > 0 || e.circles.length > 0){
+            alert('в файле не должно быть выполненного тестирования!')
+            return;
+        }
+    }
+    */
+
+
+    if (units !== e.units){
+        units = e.units;
+        unitsValue.value = units
+        unitsValue.dispatchEvent(new Event('input'))
+    }
+
+    roundSize = e.roundSize;
+    roundSizeSlider.value = roundSize;
+    roundColorPicker.value = roundSize;
+
+    roundColor = e.roundColor;
+    roundColorPicker.value = roundColor;
+
+    backgroundColor = e.backgroundColor;
+    backgroundColorPicker.value = backgroundColor;
+
+    canvasBackgroundColor = e.canvasBackgroundColor;
+    canvasBackgroundColorPicker.vallue = canvasBackgroundColor;
+
+    xPositions = e.xPositions;
+    xPositionsSlider.value = xPositions;
+    xPositionsText.value = xPositions;
+
+    yPositions = e.yPositions;
+    yPositionsSlider.value = yPositions;
+    yPositionsText.value = yPositions;
+
+    betweenPositions = e.betweenPositions;
+    betweenPositionsSlider.value = betweenPositions;
+    betweenPositionsText.value = betweenPositions;
+
+    border = e.border;
+    borderSlider.value = border;
+    borderText.value = border;
+
+    random = e.random;
+    randomSelector.value = random;
+
+    let btns = []
+    for (let q of e.buttons){
+        btns.push(document.getElementsByClassName(q[0])[0])
+    }
+
+    for (let i = 0; i < 7; i++) {
+        if (!btns.includes(btnHelper[i])) {
+            console.log(btnHelper[i])
+            btnHelper[i].checked = false;
+            btnHelper[i].dispatchEvent(new Event('input'));
+        }
+    }
+
+    for (let q of e.buttons) {
+        console.log(q)
+        let d = document.getElementById(q[0]);
+        d.value = q[1];
+    }
+
+    redrawCanvas()
+
 }
