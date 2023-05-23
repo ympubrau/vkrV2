@@ -13,3 +13,18 @@ td {
 th {
     text-align: left;
 }
+.moved {
+    margin-right: 3em;
+}
+
+.dopInfo td {
+    width: 3em;
+}
+
+table,
+th,
+td {
+    padding: 5px;
+    border: 1px solid;
+    border-collapse: collapse;
+}

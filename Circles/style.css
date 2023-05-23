@@ -2,8 +2,7 @@ body{
     font-family: 'poppins', sans-serif;
     font-size: 20px;
     line-height: 24px;
-    padding-top: 1em;
-    padding-left: 1em;
+    margin: 0;
     background-color: beige;
 }
 
@@ -15,11 +14,39 @@ div{
     padding-bottom: 2em;
 }
 
-.sizePicker{
-    display: inline-block;
-    padding: 0 2em 0 0;
-}
-
 canvas{
     background-color: white;
+}
+
+p {
+    margin-left: 10px;
+    text-align: left;
+    font-size: 20px;
+}
+
+
+#modal{
+    position: absolute;
+    display: none;
+    left: 30%;
+    top: 30%;
+    width: 40%;
+    height: 40%;
+    background: #ffffff;
+    overflow: auto;
+}
+
+#modal-background{
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000000;
+    opacity: 20%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }

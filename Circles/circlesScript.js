@@ -1,4 +1,6 @@
 const canvas = document.getElementById('canvas');
+let modal = document.getElementById('modal');
+let span = document.getElementById("modal-background");
 let mouse = {x: 0, y: 0, down: false};
 let mouseDown;
 let prevMouse = {y: 0, x:0};
@@ -53,13 +55,16 @@ function applySettings(e) {
     border = e.border;
     random = e.random;
     buttons = e.buttons;
+    console.log('qwe')
     if (e.compositions) {
         compositionResults = e.compositions;
         if (compositionResults.length > 0)
             document.getElementById('danger').hidden = true;
-        else
-            document.getElementById('danger').innerHTML = 'Сначала нужно пройти тестирование'
     }
+    else {
+        document.getElementById('danger').innerHTML = 'Сначала нужно пройти тестирование'
+    }
+
     if (e.circles) {
         circleResults = e.circles
     }
@@ -89,7 +94,9 @@ function drawFirstCanvas(){
     ctx.fillStyle = canvasBackgroundColor;
     ctx.fill();
 
-    canvas.style.marginTop = `${(window.innerHeight - canvas.offsetHeight)/2}px`;
+
+    let buttonsHeight = document.getElementById('buttons').clientHeight;
+    canvas.style.marginTop = `${(window.innerHeight - canvas.clientHeight)/2 - buttonsHeight/2}px`;
 }
 
 function startTesting(){
@@ -277,7 +284,10 @@ canvas.oncontextmenu = function () {
 }
 
 window.addEventListener("keydown", (event) => {
-    console.log(event.code)
+    if (event.code === 'Escape') {
+        modal.style.display = "none";
+        span.style.display = "none";
+    }
     if (ifCircleSelected){
         let e = event.code;
         let i = findCircle(selectedCircle);
@@ -434,4 +444,17 @@ function endTesting(){
     link.setAttribute("href",dataStr);
     link.setAttribute("download", "settings.json");
     link.click();
+}
+
+
+window.onclick = function(event) {
+    if (event.target === span) {
+        modal.style.display = "none";
+        span.style.display = "none";
+    }
+}
+
+function revealModal(){
+    modal.style.display = "block";
+    span.style.display = "block";
 }

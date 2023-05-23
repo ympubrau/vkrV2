@@ -5,26 +5,40 @@
     <title>Круговые композиции</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body oncontextmenu="return false;">
-
-
 <div id="startDiv" style=" width: 100%; margin-top: 20%; display: inline-block; text-align: center; vertical-align: middle">
-    <p hidden id="danger" style="font-size: 20px; color: red">Нужно зарузить файл!</p>
-    <button style="margin: 0 auto 2em;" onclick="startTesting()">Начать тестирование</button><br>
+    <p hidden id="danger" style="font-size: 20px; color: red; text-align: center">Нужно зарузить файл!</p>
     <label for="input"><b>Загрузить настройки:</b></label>
-    <input type="file" id="input" accept="json" onchange="uploadFile(this)"/>
+    <input type="file" id="input" accept="json" onchange="uploadFile(this)"/> <br> <br>
+    <button style="margin: 0 auto 2em;" onclick="startTesting()">Начать тестирование</button><br>
+
 </div>
 
 
 <div id="demo" style="width: 100%; text-align:center;" hidden>
+    <div id="modal-background"></div>
+
     <canvas id="canvas" style="
         margin: 2em auto ;
         display: block;">
     </canvas >
-    <button id="saveTest" style="margin: 2em auto;" onclick="saveComposition()">Сохранить композицию</button>
-    <button  id='newTest' style="margin: 2em auto;" onclick="newTest()" hidden>Новая композиция</button>
-    <button  id='endTest' style="margin: 2em auto;" onclick="endTesting()" hidden>Закончить тестирование</button>
+    <div id="modal">
+        <h1>Помощь!</h1>
+        <p>На данном этапе тестирования вам надо составить простую композицию из кругов.</p>
+        <p>Количество кругов уточняйте у руководителя тестирования!</p>
+        <h3>Управление</h3>
+        <p>Чтобы создать круг - нажмите на любое <b>пустое</b> место на полотне.</p>
+        <p>Уже нарисованный круг можно выбрать, просто нажав на него. Вокруг выбранного вами круга появится голубая рамка. Это означает, что вы выбрали именно этот круг</p>
+        <p>Выбранный круг можно передвинуть (зажав мышь на круге), изменить его размер (потянуть за голубую рамку) и удалить его (правая кнопка мыши по выбранному кругу)</p>
+        <p>Также, выбранный круг можно передвигать с помощью стрелочек на клавиатуре.</p>
+    </div>
+    <div id="buttons">
+        <button id="help" style="margin: 2em auto;" onclick="revealModal()">Помощь</button>
+        <button id="saveTest" style="margin: 2em auto;" onclick="saveComposition()">Сохранить композицию</button>
+        <button  id='newTest' style="margin: 2em auto;" onclick="newTest()" hidden>Новая композиция</button>
+        <button  id='endTest' style="margin: 2em auto;" onclick="endTesting()" hidden>Закончить тестирование</button>
+    </div>
+
 </div>
 
 </body>

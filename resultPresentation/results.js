@@ -88,22 +88,75 @@ function displayAll() {
         }
 
         for (let i = 0; i < circleResults.length; i++){
+            let w = ((xPositions - 1) * betweenPositions + border * 2) / 2;
+            let h = ((yPositions - 1) * betweenPositions + border * 2) / 2;
+            let rightPhrase, rSign;
+            let upPhrase, uSign;
+
+            if (centers[i][0] > w - 5 && centers[i][0] < w + 5) {
+                rightPhrase = 'Почти по центру';
+                rSign = ' ≈ '
+            } else if (centers[i][0] > w) {
+                rightPhrase = 'вправо'
+                rSign = ' < ';
+            } else {
+                rightPhrase = 'влево';
+                rSign = ' > ';
+            }
+
+            if (centers[i][1] > h - 5 && centers[i][1] < h + 5) {
+                upPhrase = 'Почти по центру';
+                uSign = ' ≈ '
+            } else if (centers[i][1] > h) {
+                upPhrase = 'вниз'
+                uSign = ' < ';
+            } else {
+                upPhrase = 'вверх';
+                uSign = ' > ';
+            }
+
+
             d = document.getElementById(i)
-            d.innerHTML += `<canvas class="circles" id="canvas${i}"  width="100" height="100"></canvas>`;
-            console.log(centers[i], ((xPositions - 1) * betweenPositions + border * 2), ((yPositions - 1) * betweenPositions + border * 2))
-            d.innerHTML += `<p>Смещение центра масс: ${ centers[i][0] - ((xPositions - 1) * betweenPositions + border * 2)/2} 
-                                                     ${((yPositions - 1) * betweenPositions + border * 2)/2 - centers[i][1]}</p>`
-            d.innerHTML += `<details id="details-${i}">
-                                <summary>Круги:</summary>
+            d.innerHTML += `<canvas class="circles" id="canvas${i}"  width="100" height="100" style="border: 1px  solid black"></canvas>`;
+
+            d.innerHTML += `<details open>
+                                <summary style="padding-bottom: 10px">Дополнительная информация</summary>
                                     <table>
                                         <thead>
-                                            <th>X</th>
-                                            <th>Y</th>
-                                            <th>R</th>
+                                            <th>Центр масс композиции</th>
+                                            <th>Абсолютные координаты</th>
+                                            <th>Координаты поля напр.</th>
+                                            <th>Смещение</th>
                                         </thead>
-                                        <tbody id="table-${i}"></tbody>
+                                        <tbody>
+                                        <tr>
+                                            <td>Право-лево (Х)</td>
+                                            <td>${w}</td>
+                                            <td>${rSign} ${centers[i][0]}</td>
+                                            <td>${rightPhrase}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Верх-низ (Y)</td>
+                                            <td>${h}</td>
+                                            <td>${uSign} ${centers[i][1]}</td>
+                                            <td>${upPhrase}</td>
+                                        </tr>
+                                    </tbody>
                                     </table>
                             </details>`
+
+            d.innerHTML += `<details>
+                                <summary>Круги:</summary> 
+                                <table>
+                                    <thead>
+                                        <th>X</th>
+                                        <th>Y</th>
+                                        <th>R</th>
+                                    </thead>
+                                    <tbody id="table-${i}"></tbody>
+                                 </table>
+                            </details>`
+
         }
 
 
@@ -133,26 +186,149 @@ function displayAll() {
             })
         })
 
+        if (compositionResults.length > 1) {
+            let temp = [];
+            for (let q = 0; q < compositionResults[0].length; q++) {
+                let t = 0;
+                for (let i = 0; i < compositionResults.length; i++) {
+                    t += compositionResults[i][q][2].substring(3) - 1
+                }
+                temp.push([compositionResults[0][q][0], compositionResults[0][q][1], `btn${((t / compositionResults.length))}`])
+            }
+            compositionResults.push(temp)
+        }
+
+
         for (let i = 0; i < compositionResults.length; i++){
-            d.innerHTML += `<div id="${i  + circleResults.length}"></div>`;
+            d.innerHTML += `<div id="${i  + circleResults.length}"></div>`
+            if (compositionResults.length > 1 && i === (compositionResults.length - 1)) {
+                document.getElementById(i  + circleResults.length).innerHTML += `<h3>Среднее значение:</h3>`
+            }
         }
 
         for (let i = 0; i < compositionResults.length; i++){
             d = document.getElementById(`${i + circleResults.length}`);
             d.innerHTML += `<canvas id="canvas${i  + circleResults.length}"  width="100" height="100"></canvas>`;
         }
+
+        for (let q = 0; q < compositionResults.length; q++){
+            let halfXPos = Math.floor(xPositions / 2);
+            let halfYPos = Math.floor(yPositions / 2);
+
+            let rightSum = 0;
+            let leftSum = 0;
+            let upSum = 0;
+            let downSum = 0;
+            let downColor, downSign, upColor;
+            let rightSign, rightColor, leftColor;
+
+
+            for (let i = 0; i < halfYPos; i++) {
+                for (let j = 0; j < xPositions; j++) {
+                    upSum += compositionResults[q][i * xPositions + j][2].substring(3) - 1;
+                }
+            }
+
+            for (let i = halfYPos + 1; i < yPositions; i++) {
+                for (let j = 0; j < xPositions; j++) {
+                    downSum += compositionResults[q][i * xPositions + j][2].substring(3) - 1;
+                }
+            }
+
+            for (let i = 0; i < yPositions; i++) {
+                for (let j = 0; j < halfXPos; j++) {
+                    leftSum += compositionResults[q][i * xPositions + j][2].substring(3) - 1;
+                }
+            }
+
+            for (let i = 0; i < yPositions; i++) {
+                for (let j = halfXPos + 1; j < xPositions; j++) {
+                    rightSum += compositionResults[q][i * xPositions + j][2].substring(3) - 1;
+                }
+            }
+
+            if (upSum === downSum) {
+                downSign = 'Одинаковая напряженность';
+                downColor = '#d0cece';
+                upColor = '#d0cece';
+            } else if (upSum > downSum) {
+                downSign = 'Низ спокойнее';
+                downColor = '#9cc2e5'
+                upColor = '#f7caac'
+            } else {
+                downSign = 'Верх спокойнее';
+                downColor = '#f7caac'
+                upColor = '#9cc2e5'
+            }
+
+            if (leftSum === rightSum) {
+                rightSign = 'Одинаковая напряженность';
+                rightColor = '#d0cece';
+                leftColor = '#d0cece';
+            } else if (leftSum > rightSum) {
+                rightSign = 'Право спокойнее';
+                rightColor = '#9cc2e5'
+                leftColor = '#f7caac'
+            } else {
+                rightSign = 'Лево спокойнее';
+                rightColor = '#f7caac'
+                leftColor = '#9cc2e5'
+            }
+
+            d = document.getElementById(`${q + circleResults.length}`);
+            d.innerHTML += `<details open>
+                                 <summary style="padding-bottom: 10px">Дополнительная информация</summary>
+                                 <table class="dopInfo">
+                                        <tbody>
+                                        <tr>
+                                            <td>Верх</td>
+                                            <td style="text-align: center; background: ${upColor}">${upSum}</td>
+                                            <td rowspan="2">${downSign}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Низ</td>
+                                            <td style="text-align: center; background: ${downColor}">${downSum}</td>
+                                        </tr>
+                                           
+                                        </tbody>
+                                 </table>
+                                 <br>  
+                                 <table class="dopInfo">
+                                        <tbody>
+                                        <tr>
+                                            <td>Право</td>
+                                            <td>Лево</td>
+                                            <td rowspan="2">${rightSign}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center; background: ${rightColor}">${rightSum}</td>
+                                            <td style="text-align: center; background: ${leftColor}">${leftSum}</td>
+                                        </tr>
+                                        </tbody>
+                                 </table>  
+                            </details>`
+        }
+
         for (let q = 0; q < compositionResults.length; q++) {
             d = document.getElementById(`${q + circleResults.length}`);
-            d.innerHTML += `<table><tbody id="tableMaps-${q}"></tbody></table>`
+            d.innerHTML += `<details>
+                                 <summary>Матрица</summary>
+                                    <table>
+                                        <tbody id="tableMaps-${q}"></tbody>
+                                    </table>
+                            </details>`
             d = document.getElementById('tableMaps-' + q);
             for (let i = 0; i < yPositions; i++) d.innerHTML += `<tr id="tableMaps-${q}-row-${i}"></tr>`
         }
 
+
+        let t = 0;
         for (let q = 0; q < compositionResults.length; q++) {
+            if (q === compositionResults.length - 1) t = 1;
             for (let i = 0; i < yPositions; i++) {
                 d = document.getElementById(`tableMaps-${q}-row-${i}`);
                 for (let j = 0; j < xPositions; j++) {
-                    d.innerHTML += `<td>${compositionResults[q][i * xPositions + j][2].substring(3) - 1}</td>`
+                    d.innerHTML += `<td>${compositionResults[q][i * xPositions + j][2].substring(3) - 1 + t}</td>`
                 }
             }
         }
@@ -181,9 +357,10 @@ function displayAll() {
         }
         d.innerHTML += `<p>X: ${xAvg} | Y : ${yAvg} | R: ${rAvg}</p>`;
 
-        for (let i = 0; i < compositionResults.length; i++){
+        //не среднее значение!!
+        for (let i = 0; i < compositionResults.length - 1; i++){
             let ctx = setUpCanvas(i + compositionResults.length + circleResults.length);
-            drawCompositionCanvas(i+ compositionResults.length + circleResults.length,compositionResults[i])
+            drawCompositionCanvas(i + compositionResults.length + circleResults.length, compositionResults[i])
             ctx.fillStyle = "rgba(0,231,196,0.9 )";
             ctx.strokeStyle = "rgba(0,60,255,0.95)";
             for (let e of centers) {
@@ -199,6 +376,8 @@ function displayAll() {
             }
             ctx.fillStyle = "rgba(231,212,0,0.9)";
             ctx.strokeStyle = "rgba(0,60,255,0.95)";
+
+
 
             ctx.beginPath();
             ctx.arc(xAvg, yAvg, rAvg, 0, 2 * Math.PI);
@@ -217,7 +396,7 @@ function drawCompositionCanvas(w,positions){
     let ctx = setUpCanvas(w);
 
     for (let e of positions){
-        let c = ((e[2].slice(-1)) - 1) *  (255 / (buttons.length -1))
+        let c = ((e[2].substring(3)) - 1) *  (255 / (buttons.length -1))
         ctx.fillStyle = `rgba(${c},${c},${c},100)`
 
         ctx.beginPath();
@@ -241,12 +420,12 @@ function drawCirclesCanvas(i,e){
     }
 
     drawMassCenter(centers[i], ctx)
-
-    ctx.strokeStyle = '#444444';
-    ctx.fillStyle = '#7c7c7c';
+    ctx.lineWidth = 2
+    ctx.strokeStyle = '#0479ff';
     let w = (xPositions - 1) * betweenPositions + border * 2;
     let h = (yPositions - 1) * betweenPositions + border * 2;
 
+    ctx.setLineDash([10, 10]);
     ctx.beginPath();
     ctx.moveTo(w/2, 0);
     ctx.lineTo(w/2, h);
