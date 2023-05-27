@@ -191,7 +191,7 @@ function displayAll() {
             for (let q = 0; q < compositionResults[0].length; q++) {
                 let t = 0;
                 for (let i = 0; i < compositionResults.length; i++) {
-                    t += compositionResults[i][q][2].substring(3) - 1
+                    t += Number(compositionResults[i][q][2].substring(3))
                 }
                 temp.push([compositionResults[0][q][0], compositionResults[0][q][1], `btn${((t / compositionResults.length))}`])
             }
@@ -208,7 +208,7 @@ function displayAll() {
 
         for (let i = 0; i < compositionResults.length; i++){
             d = document.getElementById(`${i + circleResults.length}`);
-            d.innerHTML += `<canvas id="canvas${i  + circleResults.length}"  width="100" height="100"></canvas>`;
+            d.innerHTML += `<canvas id="canvas${i  + circleResults.length}"  width="100" height="100" style="border: 1px  solid black"></canvas>`;
         }
 
         for (let q = 0; q < compositionResults.length; q++){
@@ -296,13 +296,13 @@ function displayAll() {
                                  <table class="dopInfo">
                                         <tbody>
                                         <tr>
-                                            <td>Право</td>
                                             <td>Лево</td>
+                                            <td>Право</td>                                         
                                             <td rowspan="2">${rightSign}</td>
                                         </tr>
                                         <tr>
-                                            <td style="text-align: center; background: ${rightColor}">${rightSum}</td>
                                             <td style="text-align: center; background: ${leftColor}">${leftSum}</td>
+                                            <td style="text-align: center; background: ${rightColor}">${rightSum}</td>
                                         </tr>
                                         </tbody>
                                  </table>  
@@ -324,7 +324,6 @@ function displayAll() {
 
         let t = 0;
         for (let q = 0; q < compositionResults.length; q++) {
-            if (q === compositionResults.length - 1) t = 1;
             for (let i = 0; i < yPositions; i++) {
                 d = document.getElementById(`tableMaps-${q}-row-${i}`);
                 for (let j = 0; j < xPositions; j++) {
@@ -352,8 +351,8 @@ function displayAll() {
         d.innerHTML = '<p><b>Невозможно представить результаты</b></p>'
     }
     else {
-        for (let i = 0; i < compositionResults.length; i++){
-            d.innerHTML += `<canvas id="canvas${i + compositionResults.length + circleResults.length}" style="" width="100" height="100"></canvas>`;
+        for (let i = 0; i < compositionResults.length - 1; i++){
+            d.innerHTML += `<canvas id="canvas${i + compositionResults.length + circleResults.length}" style="border: 1px  solid black" width="100" height="100"></canvas>`;
         }
         d.innerHTML += `<p>X: ${xAvg} | Y : ${yAvg} | R: ${rAvg}</p>`;
 
@@ -394,13 +393,37 @@ function displayAll() {
 
 function drawCompositionCanvas(w,positions){
     let ctx = setUpCanvas(w);
+    let wi = (xPositions - 1) * betweenPositions + border * 2;
+    let h = (yPositions - 1) * betweenPositions + border * 2;
 
     for (let e of positions){
         let c = ((e[2].substring(3)) - 1) *  (255 / (buttons.length -1))
         ctx.fillStyle = `rgba(${c},${c},${c},100)`
 
+        let posX = 0;
+        let posY = 0;
+        let tempW = 0;
+        let tempH = 0;
+        if (e[0] === border) {
+            posX = border / 2;
+            tempW = border / 2;
+        }
+        if (e[0] === wi - border) {
+            tempW = border / 2;
+        }
+        if (e[1] === border) {
+            posY = border / 2;
+            tempH = border / 2;
+        }
+        if (e[1] === h - border) {
+            tempH = border / 2;
+        }
+
         ctx.beginPath();
-        ctx.rect(e[0] - betweenPositions/2 - border/2, e[1] - betweenPositions/2 - border/2, betweenPositions, betweenPositions);
+        ctx.rect(e[0] - betweenPositions/2 - posX,
+                 e[1] - betweenPositions/2 - posY,
+                 betweenPositions + tempW,
+                 betweenPositions + tempH);
         ctx.fill();
         ctx.closePath()
     }
@@ -463,14 +486,12 @@ function countMassCenters() {
     }
 }
 
-function setUpCanvas(i, q){
+function setUpCanvas(i){
     let canvas = document.getElementById(`canvas${i}`)
     let ctx = canvas.getContext('2d');
 
-    let temp = q ? border * 2 : border
-
     canvas.width = (xPositions - 1) * betweenPositions + border * 2;
-    canvas.height = (yPositions - 1) * betweenPositions + temp;
+    canvas.height = (yPositions - 1) * betweenPositions + border * 2;
 
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, canvas.width, canvas.height);

@@ -13,7 +13,7 @@ td {
 th {
     text-align: left;
 }
-.moved {
+canvas {
     margin-right: 3em;
 }
 
@@ -27,4 +27,7 @@ td {
     padding: 5px;
     border: 1px solid;
     border-collapse: collapse;
+}
+table {
+    margin-right: 2em;
 }
