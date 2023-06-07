@@ -193,9 +193,10 @@ function displayAll() {
                 for (let i = 0; i < compositionResults.length; i++) {
                     t += Number(compositionResults[i][q][2].substring(3))
                 }
-                temp.push([compositionResults[0][q][0], compositionResults[0][q][1], `btn${((t / compositionResults.length))}`])
+                temp.push([compositionResults[0][q][0], compositionResults[0][q][1], `btn${((t / compositionResults.length).toFixed(2))}`])
             }
             compositionResults.push(temp)
+            console.log(temp)
         }
 
 
@@ -275,6 +276,13 @@ function displayAll() {
                 leftColor = '#9cc2e5'
             }
 
+            if (q === compositionResults.length - 1) {
+                rightSum = rightSum.toFixed(2)
+                leftSum = leftSum.toFixed(2)
+                upSum = upSum.toFixed(2)
+                downSum = downSum.toFixed(2)
+            }
+
             d = document.getElementById(`${q + circleResults.length}`);
             d.innerHTML += `<details open>
                                  <summary style="padding-bottom: 10px">Дополнительная информация</summary>
@@ -322,12 +330,15 @@ function displayAll() {
         }
 
 
-        let t = 0;
         for (let q = 0; q < compositionResults.length; q++) {
             for (let i = 0; i < yPositions; i++) {
                 d = document.getElementById(`tableMaps-${q}-row-${i}`);
                 for (let j = 0; j < xPositions; j++) {
-                    d.innerHTML += `<td>${compositionResults[q][i * xPositions + j][2].substring(3) - 1 + t}</td>`
+                    let tempNumber = compositionResults[q][i * xPositions + j][2].substring(3) - 1;
+                    if (q === compositionResults.length - 1) {
+                        tempNumber = (compositionResults[q][i * xPositions + j][2].substring(3) - 1).toFixed(2);
+                    }
+                    d.innerHTML += `<td>${tempNumber}</td>`
                 }
             }
         }
